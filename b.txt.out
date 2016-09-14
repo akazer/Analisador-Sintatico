@@ -1,0 +1,23 @@
+Erro!}: invalido na linha 5
+Erro!4h4h4h4: token numero malformado na linha 5
+
+
+ --- Tokens Encontrados ---
+se = Tipo: pal_reserv
+voce = Tipo: identificador
+eh = Tipo: identificador
+viado = Tipo: identificador
+nao = Tipo: identificador
+sei = Tipo: identificador
+mas = Tipo: identificador
+deveria = Tipo: identificador
+tentar = Tipo: identificador
+ser = Tipo: identificador
+viado = Tipo: identificador
+3 = Tipo: numero
+4 = Tipo: numero
+su4 = Tipo: identificador
+car4 = Tipo: identificador
+3.4 = Tipo: numero
+( = Tipo: delimitador
+) = Tipo: delimitador

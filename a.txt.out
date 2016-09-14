@@ -1,0 +1,21 @@
+Erro!'Cu"": token caractere malformado na linha 5
+Erro!>>: token op_relac malformado na linha 6
+
+
+ --- Tokens Encontrados ---
+programa = Tipo: pal_reserv
+inicio = Tipo: pal_reserv
+se = Tipo: pal_reserv
+foda = Tipo: identificador
+= = Tipo: op_relac
+muito = Tipo: identificador
+; = Tipo: delimitador
+eh = Tipo: identificador
+13 = Tipo: numero
+porra = Tipo: identificador
+; = Tipo: delimitador
+13.0 = Tipo: numero
+mesmo = Tipo: identificador
+; = Tipo: delimitador
+<> = Tipo: op_relac
+= = Tipo: op_relac
