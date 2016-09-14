@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Code.AnalisadorLexico;
+package Code.AnalisadorSintatico;
 
 import Code.Token;
 import Exceptions.TokenEsperadoException;
