@@ -21,3 +21,4 @@ public class Token {
         return tipo+"_"+lexema;
     }
 }
+//teste
