@@ -36,6 +36,8 @@ public class Parser{
         if("(".equals(list.get(i).getLexema()))
         {
             this.accept(list.get(i).getTipoCompleto());
+            
+            
         }
         
         else if("pal_reserv".equals(list.get(i).getTipo()))
@@ -64,6 +66,45 @@ public class Parser{
         {
             this.accept(list.get(i).getTipoCompleto());
         }
+    }
+    
+    public void v1() throws TokenEsperadoException{
+        
+        this.cat();
+        
+        if("delimitador".equals(list.get(i).getTipo()))
+        {
+            if(",".equals(list.get(i).getLexema()))
+            {
+                accept("delimitador_,");
+                
+                this.v1();
+            }
+            else if(";".equals(list.get(i).getLexema()))
+            {
+                this.cat();
+                
+                accept("delimitador_;");
+            }
+            else this.accept(list.get(i).getTipoCompleto());
+        }
+        else this.accept(list.get(i).getTipoCompleto());
+        
+    }
+    
+    public void cat() throws TokenEsperadoException{
+        
+        if("delimitador".equals(list.get(i).getTipo()))
+        {
+            this.accept(list.get(i).getTipoCompleto());
+            
+            if("(".equals(list.get(i).getLexema()))
+            {
+                this.a();
+            }
+        }
+        else this.accept(list.get(i).getTipoCompleto());
+        
     }
     
 }
