@@ -32,6 +32,40 @@ public class Parser{
     }
     
     
+    public void valor() throws TokenEsperadoException{
+        if("(".equals(list.get(i).getLexema()))
+        {
+            this.accept(list.get(i).getTipoCompleto());
+        }
+        
+        else if("pal_reserv".equals(list.get(i).getTipo()))
+        {
+            if("verdadeiro".equals(list.get(i).getLexema()))
+            {
+                this.accept(list.get(i).getTipoCompleto());
+            }
+            if("falso".equals(list.get(i).getLexema()))
+            {
+                this.accept(list.get(i).getTipoCompleto());
+            }
+        }
+        
+        else if("identificador".equals(list.get(i).getTipo()))
+        {
+            this.accept(list.get(i).getTipoCompleto());
+        }
+        
+        else if("numero".equals(list.get(i).getTipo()))
+        {
+            this.accept(list.get(i).getTipoCompleto());
+        }
+        
+        else //case default
+        {
+            this.accept(list.get(i).getTipoCompleto());
+        }
+    }
+    
 }
 
 /*
