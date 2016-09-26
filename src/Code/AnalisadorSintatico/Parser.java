@@ -141,6 +141,26 @@ public class Parser{
         }
     }
     
+    public void expressao_aritmetica(){
+        
+        this.mult_exp();
+        this.expressao_aritmeticaRec();
+        
+    }
+    
+    public void mult_exp(){
+        
+        this.neg_exp();
+        this.mult_expRec();
+        
+    }
+    
+    public void expressao_aritmeticaRec() throws TokenEsperadoException{
+        
+        this.accept("op_arit_+");
+        
+        
+    }
     
 }
 
