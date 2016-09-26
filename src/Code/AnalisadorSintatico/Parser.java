@@ -252,7 +252,7 @@ public class Parser{
         this.se();
     }
     
-    public void se(){
+    public void se() throws TokenEsperadoException{
         
         if("senao".equals(list.get(i).getLexema()))
         {
@@ -262,6 +262,96 @@ public class Parser{
         {
             
         }
+    }
+    
+    public void negacao() throws TokenEsperadoException{
+        
+        this.accept("pal_reserv_senao");
+        this.bloco_de_codigo();
+        
+    }
+    
+    public void expressao_booleana() throws TokenEsperadoException{
+        
+        this.aux_expression();
+        this.expressao_booleanaRec();
+        
+    }
+    
+    public void aux_expression() throws TokenEsperadoException{
+        
+        this.nao_expressao_aritmetica();
+        this.aux_expressionRec();
+        
+    }
+    
+    public void aux_expressionRec() throws TokenEsperadoException{
+            
+        if(">".equals(list.get(i).getLexema()))
+        {
+            this.accept("op_relac_>");
+            if("=".equals(list.get(i).getLexema()))
+            {
+                this.accept("op_relac_=");
+            }
+            this.aux_expression();
+        }
+        else if("<".equals(list.get(i).getLexema()))
+        {
+            this.accept("op_relac_<");
+            if("=".equals(list.get(i).getLexema()))
+            {
+                this.accept("op_relac_=");
+            }
+            else if(">".equals(list.get(i).getLexema()))
+            {
+                this.accept("op_relac_>");
+            }
+            this.aux_expression();
+        }
+        else if("=".equals(list.get(i).getLexema()))
+        {
+            this.accept("op_relac_=");
+        }
+        else //aceita vazio
+        {
+            
+        }
+    }
+    
+    public void expressao_booleanaRec() throws TokenEsperadoException{
+        
+        if("e".equals(list.get(i).getLexema()))
+        {
+            this.accept("pal_reserv_e");
+            this.expressao_booleana();
+        }
+        else if("ou".equals(list.get(i).getLexema()))
+        {
+            this.accept("pal_reserv_ou");
+            this.expressao_booleana();
+        }
+        else //aceita vazio
+        {
+            
+        }
+    }
+    
+    public void nao_expressao_aritmetica() throws TokenEsperadoException{
+        
+        if("nao".equals(list.get(i).getLexema()))
+        {
+            this.accept("pal_reserv_nao");
+            this.expressao_aritmetica();
+        }
+        else if("(".equals(list.get(i).getLexema()))
+        {
+            this.accept("delimitador_(");
+            this.expressao_booleana();
+            this.accept("delimitador_)");
+        }
+        else this.expressao_aritmetica();
+        
     }
     
     public void declaracao_var(){
