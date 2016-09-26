@@ -35,26 +35,28 @@ public class Parser{
     public void valor() throws TokenEsperadoException{
         if("(".equals(list.get(i).getLexema()))
         {
-            this.accept(list.get(i).getTipoCompleto());
+            this.accept("delimitador_(");
+            if()
             
-            
+            this.expressao_aritmetica(); //adicionar chamada_funcao
+            this.accept("delimitador_)");
         }
         
         else if("pal_reserv".equals(list.get(i).getTipo()))
         {
             if("verdadeiro".equals(list.get(i).getLexema()))
             {
-                this.accept(list.get(i).getTipoCompleto());
+                this.accept("pal_reserv_verdadeiro");
             }
             if("falso".equals(list.get(i).getLexema()))
             {
-                this.accept(list.get(i).getTipoCompleto());
+                this.accept("pal_reserv_falso");
             }
         }
         
         else if("identificador".equals(list.get(i).getTipo()))
         {
-            this.accept(list.get(i).getTipoCompleto());
+            this.accept(list.get(i).getTipoCompleto()); //adicionar chamada_matriz
         }
         
         else if("numero".equals(list.get(i).getTipo()))
@@ -106,6 +108,39 @@ public class Parser{
         else this.accept(list.get(i).getTipoCompleto());
         
     }
+    
+    public void a() throws TokenEsperadoException{
+        
+        this.accept("delimitador_(");
+        this.accept("delimitador_("); //espera dois ( mesmo
+        
+        if("numero".equals(list.get(i).getTipo())) // ((numero))A | ((numero))
+        {
+            this.accept(list.get(i).getTipoCompleto());
+            this.accept("delimitador_)");
+            this.accept("delimitador_)");
+            if("(".equals(list.get(i).getLexema())) this.a();
+        }
+        
+        else if("identificador".equals(list.get(i).getTipo())) // ((id))A | ((id)) | ((acessa_matriz)) | ((acessa_matriz))A
+        {
+            this.accept(list.get(i).getTipoCompleto());
+            if("(".equals(list.get(i).getLexema()))
+            {
+                this.a();
+            }
+            if(")".equals(list.get(i).getLexema()))
+            {
+                this.accept("delimitador_)");
+                this.accept("delimitador_)");
+            }
+        }
+        else
+        {
+            this.accept(list.get(i).getTipoCompleto());
+        }
+    }
+    
     
 }
 
