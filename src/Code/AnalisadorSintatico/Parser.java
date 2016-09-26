@@ -141,14 +141,14 @@ public class Parser{
         }
     }
     
-    public void expressao_aritmetica(){
+    public void expressao_aritmetica() throws TokenEsperadoException{
         
         this.mult_exp();
         this.expressao_aritmeticaRec();
         
     }
     
-    public void mult_exp(){
+    public void mult_exp() throws TokenEsperadoException{
         
         this.neg_exp();
         this.mult_expRec();
@@ -157,10 +157,50 @@ public class Parser{
     
     public void expressao_aritmeticaRec() throws TokenEsperadoException{
         
-        this.accept("op_arit_+");
-        
-        
+        if("+".equals(list.get(i).getLexema()))
+        {
+            this.accept("op_arit_+");
+            this.expressao_aritmetica();
+        }
+        else if("-".equals(list.get(i).getLexema()))
+        {
+            this.accept("op_arit_-");
+            this.expressao_aritmetica();
+        }
+        else //reconhece vazio
+        {
+            
+        }
     }
+    
+    public void mult_expRec() throws TokenEsperadoException{
+        
+        if("*".equals(list.get(i).getLexema()))
+        {
+            this.accept("op_arit_*");
+            this.expressao_aritmetica();
+        }
+        else if("/".equals(list.get(i).getLexema()))
+        {
+            this.accept("op_arit_/");
+            this.expressao_aritmetica();
+        }
+        else //reconhece vazio
+        {
+            
+        }
+    }
+    
+    public void neg_exp() throws TokenEsperadoException{
+        
+        if("-".equals(list.get(i).getLexema()))
+        {
+            this.accept("op_arit_-");
+        }
+        
+        this.valor();
+    }
+    
     
 }
 
