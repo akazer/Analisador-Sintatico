@@ -201,6 +201,74 @@ public class Parser{
         this.valor();
     }
     
+    public void bloco_de_codigo() throws TokenEsperadoException{
+        
+        if("inicio".equals(list.get(i).getLexema()))
+        {
+            this.accept("pal_reserv_inicio");
+            this.brx();
+            this.accept("pal_reserv_fim");
+        }
+        else this.bx();
+    }
+    
+    public void bx() throws TokenEsperadoException{
+        
+        if("se".equals(list.get(i).getLexema()))
+        {
+            this.se_entao_senao();
+        }
+        else if("var".equals(list.get(i).getLexema()))
+        {
+            this.declaracao_var();
+        }
+        else if("identificador".equals(list.get(i).getTipo()))
+        {
+            this.teste_id();
+        }
+        else if("enquanto".equals(list.get(i).getLexema()))
+        {
+            this.enquanto();
+        }
+        else if("leia".equals(list.get(i).getLexema()))
+        {
+            this.leia();
+        }
+        else if("escreva".equals(list.get(i).getLexema()))
+        {
+            this.escreva();
+        }
+        else this.accept(list.get(i).getTipoCompleto());
+    }
+    
+    public void se_entao_senao() throws TokenEsperadoException{
+        
+        this.accept("pal_reserv_se");
+        this.accept("delimitador_(");
+        this.expressao_booleana();
+        this.accept("delimitador_)");
+        this.accept("pal_reserv_entao");
+        this.bloco_de_codigo();
+        this.se();
+    }
+    
+    public void se(){
+        
+        if("senao".equals(list.get(i).getLexema()))
+        {
+            this.negacao();
+        }
+        else //aceita vazio
+        {
+            
+        }
+    }
+    
+    public void declaracao_var(){
+        
+        
+    }
+    
     
 }
 
