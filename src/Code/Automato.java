@@ -8,7 +8,7 @@ public class Automato {
     static String palavrasReservadas[] = {"programa","const","var","funcao","inicio",
                                     "fim","se","entao","senao","enquanto","faca",
                                     "leia","escreva","inteiro","real","booleano",
-                                    "verdadeiro", "falso","cadeia","caractere"};
+                                    "verdadeiro", "falso","cadeia","caractere", "nao", "e", "ou"};
     
     public static Token reconhecerToken(String teste) throws MalformadoException{
         int ch = 0, estadoAtual = 0;
