@@ -69,6 +69,44 @@ public class Parser{
         }
     }
     
+    public void program() throws TokenEsperadoException{
+        
+        if("const".equals(list.get(i).getLexema()) || "var".equals(list.get(i).getLexema()))
+        {
+            this.bloco_declaracao_global();
+            this.declaracao_programa();
+            if("funcao".equals(list.get(i).getLexema()))
+            {
+                this.fx();
+            }
+            else //aceita vazio
+            {
+                
+            }
+        }
+        
+    }
+    
+    public void bloco_declaracao_global() throws TokenEsperadoException{
+        
+        if("const".equals(list.get(i).getLexema()))
+        {
+            this.declaracao_const();
+            this.bloco_declaracao_global();
+        }
+        
+        else if("var".equals(list.get(i).getLexema()))
+        {
+            this.declaracao_var();
+            this.bloco_declaracao_global();
+        }
+        
+        else //aceita vazio
+        {
+            
+        }
+    }
+    
     public void v1() throws TokenEsperadoException{
         
         this.cat();
@@ -238,6 +276,81 @@ public class Parser{
             this.escreva();
         }
         else this.accept(list.get(i).getTipoCompleto());
+    }
+    
+    public void teste_id() throws TokenEsperadoException{
+        
+        if("delimitador".equals(list.get(i).getTipo()))
+        {
+            this.accept(list.get(i).getTipoCompleto());
+        }
+        this.teste_id2();
+    }
+    
+    public void teste_id2(){ //fazer depois
+        
+        if("=".equals(list.get(i).getLexema()))
+        {
+            
+        }
+        
+    }
+    
+    public void escreva() throws TokenEsperadoException{
+        
+        this.accept("pal_reserv_escreva");
+        this.accept("delimitador_(");
+        this.expressao();
+        
+    }
+    
+    public void expressao(){
+        
+        
+        
+    }
+    
+    public void enquanto() throws TokenEsperadoException{
+        
+        this.accept("pal_reserv_enquanto");
+        this.accept("delimitador_(");
+        this.expressao_booleana();
+        this.accept("delimitador_)");
+        this.accept("pal_reserv_faca");
+        this.bloco_de_codigo();
+        
+    }
+    
+    public void leia() throws TokenEsperadoException{
+        
+        this.accept("pal_reserv_leia");
+        this.accept("delimitador_(");
+        this.exp();
+        
+    }
+    
+    public void exp() throws TokenEsperadoException{
+        
+        if("delimitador".equals(list.get(i).getTipo()))
+        {
+            this.accept(list.get(i).getTipoCompleto());
+            this.exp2();
+        }
+        else
+        {
+            this.accept("delimitador_)");
+            this.accept("delimitador_;");
+        }
+
+    }
+    
+    public void exp2(){
+        
+        if(",".equals(list.get(i).getLexema()))
+        {
+            
+        }
+        
     }
     
     public void bxr() throws TokenEsperadoException{
@@ -437,6 +550,48 @@ public class Parser{
         {
             this.accept("pal_reserv_caractere");
         }
+    }
+    
+    public void declaracao_const() throws TokenEsperadoException{
+        
+        this.constx();
+        
+    }
+    
+    public void constx() throws TokenEsperadoException{
+        
+        this.dec_const();
+        if("const".equals(list.get(i).getLexema()))
+        {
+            this.constx();
+        }
+        
+    }
+    
+    public void dec_const() throws TokenEsperadoException{
+        
+        this.accept("pal_reserv_const");
+        this.tipo();
+        if("delimitador".equals(list.get(i).getTipo()))
+        {
+            this.accept(list.get(i).getTipoCompleto());
+        }
+        this.accept("op_relac_=");
+        
+        if("numero".equals(list.get(i).getTipo()))
+        {
+            this.accept(list.get(i).getTipoCompleto());
+        }
+        else if("caractere".equals(list.get(i).getTipo()))
+        {
+            this.accept(list.get(i).getTipoCompleto());
+        }
+        else if("cadeia".equals(list.get(i).getTipo()))
+        {
+            this.accept(list.get(i).getTipoCompleto());
+        }
+        
+        this.accept("delimitador_;");
     }
     
 }
