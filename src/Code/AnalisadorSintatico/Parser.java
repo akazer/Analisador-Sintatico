@@ -36,7 +36,6 @@ public class Parser{
         if("(".equals(list.get(i).getLexema()))
         {
             this.accept("delimitador_(");
-            if()
             
             this.expressao_aritmetica(); //adicionar chamada_funcao
             this.accept("delimitador_)");
@@ -206,7 +205,7 @@ public class Parser{
         if("inicio".equals(list.get(i).getLexema()))
         {
             this.accept("pal_reserv_inicio");
-            this.brx();
+            this.bxr();
             this.accept("pal_reserv_fim");
         }
         else this.bx();
@@ -239,6 +238,34 @@ public class Parser{
             this.escreva();
         }
         else this.accept(list.get(i).getTipoCompleto());
+    }
+    
+    public void bxr() throws TokenEsperadoException{
+        
+        this.bx();
+        this.bxr2();
+        
+    }
+    
+    public void bxr2() throws TokenEsperadoException{
+        
+        if(
+           "enquanto".equals(list.get(i).getLexema())       ||
+           "escreva".equals(list.get(i).getLexema())        ||
+           "identificador".equals(list.get(i).getTipo())    ||
+           "leia".equals(list.get(i).getLexema())           ||
+           "se".equals(list.get(i).getLexema())             ||
+           "var".equals(list.get(i).getLexema())
+          )
+        {
+            this.bxr();
+        }
+        
+        else //aceita vazio
+        {
+            
+        }
+        
     }
     
     public void se_entao_senao() throws TokenEsperadoException{
@@ -354,11 +381,63 @@ public class Parser{
         
     }
     
-    public void declaracao_var(){
+    public void declaracao_var() throws TokenEsperadoException{
         
+        this.decx();
         
     }
     
+    public void decx() throws TokenEsperadoException{
+        
+        this.dec();
+        
+        if("var".equals(list.get(i).getLexema()))
+        {
+            this.decx();
+        }
+        
+    }
+    
+    public void dec() throws TokenEsperadoException{
+        
+        this.accept("pal_reserv_var");
+        this.tipo();
+        this.cat();
+        if(";".equals(list.get(i).getLexema()))
+        {
+            this.accept("delimitador_;");
+        }
+        if(",".equals(list.get(i).getLexema()))
+        {
+            this.accept("delimitador_,");
+            this.v1();
+        }
+        
+    }
+    
+    public void tipo() throws TokenEsperadoException{
+        
+        if("inteiro".equals(list.get(i).getLexema()))
+        {
+            this.accept("pal_reserv_inteiro");
+        }
+        else if("cadeia".equals(list.get(i).getLexema()))
+        {
+            this.accept("pal_reserv_cadeia");
+        }
+        else if("real".equals(list.get(i).getLexema()))
+        {
+            this.accept("pal_reserv_real");
+        }
+        else if("booleano".equals(list.get(i).getLexema()))
+        {
+            this.accept("pal_reserv_booleano");
+        }
+        else if("caractere".equals(list.get(i).getLexema()))
+        {
+            this.accept("pal_reserv_caractere");
+        }
+    }
     
 }
 
