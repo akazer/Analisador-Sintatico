@@ -53,7 +53,7 @@ class Main {
                           
                           while(i<lista.size()){
                               try {
-                                  tokens.add(Automato.reconhecerToken(lista.get(i).trim()));
+                                  tokens.add(Automato.reconhecerToken(lista.get(i).trim(),linha+1));
                                   token_line.add(linha+1);
                               } catch (MalformadoException ex) {
                                   if(ex.getToken().getTipo().equals("invalido")){

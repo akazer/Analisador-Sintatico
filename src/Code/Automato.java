@@ -10,7 +10,7 @@ public class Automato {
                                     "leia","escreva","inteiro","real","booleano",
                                     "verdadeiro", "falso","cadeia","caractere", "nao", "e", "ou"};
     
-    public static Token reconhecerToken(String teste) throws MalformadoException{
+    public static Token reconhecerToken(String teste, Integer linha) throws MalformadoException{
         int ch = 0, estadoAtual = 0;
         Token t = null;
     
@@ -23,72 +23,72 @@ public class Automato {
             case 0: 
                     if(isLetter(c)){
                         estadoAtual = 1;
-                        t = new Token(teste, "identificador");
+                        t = new Token(teste, "identificador",linha);
                     }
                     else if(isDigit(c)){
                         estadoAtual = 3;
-                        t = new Token(teste, "numero");
+                        t = new Token(teste, "numero",linha);
                     }
                     else if(c=='-'){
                         estadoAtual = 2;
-                        t = new Token(teste, "op_arit");
+                        t = new Token(teste, "op_arit",linha);
                     }
                     else if(c=='"'){
                         estadoAtual = 4;
-                        t = new Token(teste, "cadeia");
+                        t = new Token(teste, "cadeia",linha);
                     }
                     else if(c=='\''){
                         estadoAtual = 5;
-                        t = new Token(teste, "digito");
+                        t = new Token(teste, "digito",linha);
                     }
                     else if(c=='+'){
                         estadoAtual = 6;
-                        t = new Token(teste, "op_arit");
+                        t = new Token(teste, "op_arit",linha);
                     }
                     else if(c=='*'){
                         estadoAtual = 6;
-                        t = new Token(teste, "op_arit");
+                        t = new Token(teste, "op_arit",linha);
                     }
                     else if(c=='/'){
                         estadoAtual = 6;
-                        t = new Token(teste, "op_arit");
+                        t = new Token(teste, "op_arit",linha);
                     }
                     else if(c==';'){
                         estadoAtual = 7;
-                        t = new Token(teste, "delimitador");
+                        t = new Token(teste, "delimitador",linha);
                     }
                     else if(c==','){
                         estadoAtual = 7;
-                        t = new Token(teste, "delimitador");
+                        t = new Token(teste, "delimitador",linha);
                     }
                     else if(c=='('){
                         estadoAtual = 7;
-                        t = new Token(teste, "delimitador");
+                        t = new Token(teste, "delimitador",linha);
                     }
                     else if(c==')'){
                         estadoAtual = 7;
-                        t = new Token(teste, "delimitador");
+                        t = new Token(teste, "delimitador",linha);
                     }
                     else if(c=='<'){
                         estadoAtual = 8;
-                        t = new Token(teste, "op_relac");
+                        t = new Token(teste, "op_relac",linha);
                     }
                     else if(c=='='){
                         estadoAtual = 9;
-                        t = new Token(teste, "op_relac");
+                        t = new Token(teste, "op_relac",linha);
                     }
                     else if(c=='>'){
                         estadoAtual = 10;
-                        t = new Token(teste, "op_relac");
+                        t = new Token(teste, "op_relac",linha);
                     }
                     else{
                         estadoAtual = -1;
-                        t = new Token(teste, "invalido");
+                        t = new Token(teste, "invalido",linha);
                     }
                     break;
                     
             case 1: 
-                    t = new Token(teste, "identificador");
+                    t = new Token(teste, "identificador",linha);
                     if(isLetterOrDigit(c) || c=='_')
                         estadoAtual = 1;
                     else
@@ -98,13 +98,13 @@ public class Automato {
             case 2:     
                     if(isDigit(c)){
                         estadoAtual = 3;
-                        t = new Token(teste, "numero");
+                        t = new Token(teste, "numero",linha);
                     }
                     else
                         estadoAtual = -1;
                     break;
                     
-            case 3: t = new Token(teste, "numero");
+            case 3: t = new Token(teste, "numero",linha);
                     if(isDigit(c))
                         estadoAtual = 3;
                     else if(c=='.')
@@ -113,39 +113,39 @@ public class Automato {
                         estadoAtual = -1;
                     break;
                     
-            case 4: t = new Token(teste, "cadeia");
+            case 4: t = new Token(teste, "cadeia",linha);
                     if(isLetter(c))
                         estadoAtual = 14;
                     else
                         estadoAtual = -1;
                     break;
                     
-            case 5: t = new Token(teste, "caractere");
+            case 5: t = new Token(teste, "caractere",linha);
                     if(isLetterOrDigit(c))
                         estadoAtual = 15;
                     else
                         estadoAtual = -1;
                     break;
                     
-            case 6: t = new Token(teste, "op_arit");
+            case 6: t = new Token(teste, "op_arit",linha);
                     estadoAtual = -1;
                     break;
                     
-            case 7: t = new Token(teste, "delimitador");
+            case 7: t = new Token(teste, "delimitador",linha);
                     estadoAtual = -1;
                     break;
             
-            case 8: t = new Token(teste, "op_relac");
+            case 8: t = new Token(teste, "op_relac",linha);
                     if (c=='>' || c=='=')
                         estadoAtual = 9;
                     else estadoAtual = -1;    
                     break;
                     
-            case 9: t = new Token(teste, "op_relac");
+            case 9: t = new Token(teste, "op_relac",linha);
                     estadoAtual = -1;
                     break;
                     
-            case 10:t = new Token(teste, "op_relac");
+            case 10:t = new Token(teste, "op_relac",linha);
                     if(c=='=')
                         estadoAtual = 9;
                     else
@@ -194,13 +194,13 @@ public class Automato {
     }
     
     //Reconhecendo estados finais
-    if(t==null) throw new MalformadoException(new Token(teste, "invalido"));
+    if(t==null) throw new MalformadoException(new Token(teste, "invalido",linha));
     
         switch (estadoAtual) {
             case 1:
                 for(String a: palavrasReservadas)
                     if(a.equals(teste))
-                        return new Token(teste, "pal_reserv");
+                        return new Token(teste, "pal_reserv",linha);
                 break;
                 
             case -1:
