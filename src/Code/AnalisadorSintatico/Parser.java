@@ -150,9 +150,19 @@ public class Parser{
             this.accept(list.get(i).getTipoCompleto());
             this.r();
         }
+    }
+    
+    public void r(){
         
-        
-        
+        if(",".equals(list.get(i).getLexema()))
+        {
+            this.accept("delimitador_,");
+            this.parametro();
+        }
+        else //aceita vazio
+        {
+            
+        }
     }
     
     public void program(){
@@ -170,8 +180,63 @@ public class Parser{
                 
             }
         }
+    }
+    
+    public void fx(){
+        
+        if("funcao".equals(list.get(i).getLexema()))
+        {
+            this.funcao();
+        }
+        else //aceita vazio
+        {
+            
+        }
+    }
+    
+    public void funcao(){
+        
+        this.accept("pal_reserv_funcao");
+        this.tipo();
+        if("identificador".equals(list.get(i).getTipo()))
+        {
+            this.accept(list.get(i).getTipoCompleto());
+        }
+        this.accept("delimitador_(");
+        this.d();
+        this.accept("delimitador_)");
+        this.accept("pal_reserv_inicio");
+        this.bxr();
+        this.accept("pal_reserv_fim");
+        this.accept("delimitador_(");
+        this.retorno();
+        this.accept("delimitador_)");
+        this.accept("delimitador_;");
         
     }
+    
+    public void declaracao_programa(){
+        
+        this.accept("pal_reserv_programa");
+        this.tipo();
+        if("identificador".equals(list.get(i).getTipo()))
+        {
+            this.accept(list.get(i).getTipoCompleto());
+        }
+        this.accept("delimitador_(");
+        this.parametro_programa();
+        this.accept("delimitador_)");
+        this.accept("pal_reserv_inicio");
+        this.bxr();
+        this.accept("pal_reserv_fim");
+        this.accept("delimitador_(");
+        this.retorno();
+        this.accept("delimitador_)");
+        this.accept("delimitador_;");
+        
+    }
+    
+    
     
     public void bloco_declaracao_global(){
         
