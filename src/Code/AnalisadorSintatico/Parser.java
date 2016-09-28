@@ -7,6 +7,7 @@ package Code.AnalisadorSintatico;
 
 import Code.Token;
 import Exceptions.TokenEsperadoException;
+import java.io.EOFException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,29 +26,30 @@ public class Parser{
         erros = new ArrayList<>();
     }
     
-    public boolean accept(String tipoToken) {
-        
+    public void EOFTeste()
+    {
+        if(i>=list.size())
+        {
+            erros.add("Fim de arquivo inesperado");
+            return;
+        }
+    }
+    
+    public boolean accept(String tipoToken){    
+
     if(tipoToken.equals(list.get(i).getTipoCompleto())){
         i++;
         return true;
     } else {
-            
-    if(
-        "identificador".equals(list.get(i).getTipo()) ||
-        "cadeia".equals(list.get(i).getTipo())        ||
-        "caractere".equals(list.get(i).getTipo())     ||
-        "numero".equals(list.get(i).getTipo())
-       )
-    {
-        erros.add("Token "+list.get(i).getTipo()+" esperado na linha "+list.get(i).getLinha());
-    }
-    else erros.add("Token "+tipoToken+" esperado na linha "+list.get(i).getLinha());
+        erros.add("Token "+tipoToken+" esperado na linha "+list.get(i).getLinha());
     }
         return false;
     }
     
     
     public void valor(){
+        
+        this.EOFTeste();
         if("(".equals(list.get(i).getLexema()))
         {
             this.accept("delimitador_(");
@@ -80,12 +82,13 @@ public class Parser{
         
         else //case default
         {
-            this.accept(list.get(i).getTipoCompleto()); //OU JÁ DECLARAR ERRO AQUI
+            erros.add("Valor esperado na linha " + list.get(i).getLinha());
         }
     }
     
     public void aux_valor1(){
         
+        this.EOFTeste();
         if("(".equals(list.get(i).getLexema()))
         {
             this.accept("delimitador_(");
@@ -99,20 +102,22 @@ public class Parser{
     
     public void aux_valor2(){
         
+        this.EOFTeste();
         if("(".equals(list.get(i).getLexema()))
         {
             this.accept("delimitador_(");
             this.aux_valor3();
         }
-        else
+        else 
         {
             this.parametro();
             this.accept("delimitador_)");
-        } 
+        }
     }
     
     public void aux_valor3(){
         
+        this.EOFTeste();
         this.valor();
         this.accept("delimitador_)");
         this.accept("delimitador_)");
@@ -122,6 +127,7 @@ public class Parser{
     
     public void aux_valor4(){
         
+        this.EOFTeste();
         if("(".equals(list.get(i).getLexema()))
         {
             this.accept("delimitador_(");
@@ -139,6 +145,7 @@ public class Parser{
     
     public void parametro(){
         
+        this.EOFTeste();
         if("cadeia".equals(list.get(i).getTipo()))
         {
             this.accept(list.get(i).getTipoCompleto());
@@ -161,10 +168,15 @@ public class Parser{
             this.accept(list.get(i).getTipoCompleto());
             this.r();
         }
+        else //aceita vazio
+        {
+            
+        }
     }
     
     public void r(){
         
+        this.EOFTeste();
         if(",".equals(list.get(i).getLexema()))
         {
             this.accept("delimitador_,");
@@ -177,24 +189,50 @@ public class Parser{
     }
     
     public void program(){
+       
+       this.EOFTeste();
+       this.declaracao_var_global();
+       this.declaracao_programa();
+       this.funcoes();
         
-        if("const".equals(list.get(i).getLexema()) || "var".equals(list.get(i).getLexema()))
+    }
+    
+    public void declaracao_var_global(){
+        
+        this.EOFTeste();
+        if("const".equals(list.get(i).getLexema()))
         {
-            this.bloco_declaracao_global();
-            this.declaracao_programa();
-            if("funcao".equals(list.get(i).getLexema()))
-            {
-                this.fx();
-            }
-            else //aceita vazio
-            {
-                
-            }
+            this.dec_const();
+            this.declaracao_var_global();
+        }
+        else if("var".equals(list.get(i).getLexema()))
+        {
+            this.dec();
+            this.declaracao_var_global();
+        }
+        else //aceita vazio
+        {
+            
+        }
+    }
+    
+    public void funcoes(){
+        
+        this.EOFTeste();
+        if("funcao".equals(list.get(i).getLexema()))
+        {
+            this.funcao();
+            this.fx();
+        }
+        else //aceita vazio
+        {
+            
         }
     }
     
     public void fx(){
         
+        this.EOFTeste();
         if("funcao".equals(list.get(i).getLexema()))
         {
             this.funcao();
@@ -207,6 +245,7 @@ public class Parser{
     
     public void funcao(){
         
+        this.EOFTeste();
         this.accept("pal_reserv_funcao");
         this.tipo();
         if("identificador".equals(list.get(i).getTipo()))
@@ -228,6 +267,7 @@ public class Parser{
     
     public void d(){
         
+        this.EOFTeste();
         this.tipo();
         if("identificador".equals(list.get(i).getTipo()))
         {
@@ -239,6 +279,7 @@ public class Parser{
     
     public void d2(){
         
+        this.EOFTeste();
         if(",".equals(list.get(i).getLexema()))
         {
             this.q();
@@ -251,6 +292,7 @@ public class Parser{
     
     public void q(){
         
+        this.EOFTeste();
         this.accept("delimitador_,");
         this.d();
         
@@ -258,6 +300,7 @@ public class Parser{
     
     public void retorno(){
         
+        this.EOFTeste();
         if("caractere".equals(list.get(i).getTipo()))
         {
             this.accept(list.get(i).getTipoCompleto());
@@ -287,6 +330,7 @@ public class Parser{
     
     public void declaracao_programa(){
         
+        this.EOFTeste();
         this.accept("pal_reserv_programa");
         this.tipo();
         if("identificador".equals(list.get(i).getTipo()))
@@ -308,6 +352,7 @@ public class Parser{
     
     public void parametro_programa(){
         
+        this.EOFTeste();
         if( //P(tipo)
             "booleano".equals(list.get(i).getLexema())   ||
             "cadeia".equals(list.get(i).getTipo())       ||
@@ -334,104 +379,89 @@ public class Parser{
     
     public void parametro3(){
         
+        this.EOFTeste();
         this.accept("delimitador_,");
         this.parametro_programa();
         
     }
     
-    public void bloco_declaracao_global(){
+//    public void bloco_declaracao_global(){
+//        
+//        if("const".equals(list.get(i).getLexema()))
+//        {
+//            this.declaracao_const();
+//            this.bloco_declaracao_global();
+//        }
+//        
+//        else if("var".equals(list.get(i).getLexema()))
+//        {
+//            this.declaracao_var();
+//            this.bloco_declaracao_global();
+//        }
+//        
+//        else //aceita vazio
+//        {
+//            
+//        }
+//    }
+    
+    public void v1(){
         
-        if("const".equals(list.get(i).getLexema()))
+        if(",".equals(list.get(i).getLexema()))
         {
-            this.declaracao_const();
-            this.bloco_declaracao_global();
+            this.accept("delimitador_,");
+            if("identificador".equals(list.get(i).getTipo()))
+            {
+            this.accept(list.get(i).getTipoCompleto());
+            }
+            this.a();
+            this.v1();
         }
-        
-        else if("var".equals(list.get(i).getLexema()))
-        {
-            this.declaracao_var();
-            this.bloco_declaracao_global();
-        }
-        
         else //aceita vazio
         {
             
         }
     }
     
-    public void v1(){
-        
-        this.cat();
-        
-        if("delimitador".equals(list.get(i).getTipo()))
-        {
-            if(",".equals(list.get(i).getLexema()))
-            {
-                accept("delimitador_,");
-                
-                this.v1();
-            }
-            else if(";".equals(list.get(i).getLexema()))
-            {
-                this.cat();
-                
-                accept("delimitador_;");
-            }
-            else this.accept(list.get(i).getTipoCompleto());
-        }
-        else this.accept(list.get(i).getTipoCompleto());
-        
-    }
-    
-    public void cat(){
-        
-        if("delimitador".equals(list.get(i).getTipo()))
-        {
-            this.accept(list.get(i).getTipoCompleto());
-            
-            if("(".equals(list.get(i).getLexema()))
-            {
-                this.a();
-            }
-        }
-        else this.accept(list.get(i).getTipoCompleto());
-        
-    }
+//    public void cat(){
+//        
+//        if("delimitador".equals(list.get(i).getTipo()))
+//        {
+//            this.accept(list.get(i).getTipoCompleto());
+//            
+//            if("(".equals(list.get(i).getLexema()))
+//            {
+//                this.a();
+//            }
+//        }
+//        else this.accept(list.get(i).getTipoCompleto());
+//        
+//    }
     
     public void a(){
         
-        this.accept("delimitador_(");
-        this.accept("delimitador_("); //espera dois ( mesmo
-        
-        if("numero".equals(list.get(i).getTipo())) // ((numero))A | ((numero))
+        this.EOFTeste();
+        if("(".equals(list.get(i).getLexema()))
         {
-            this.accept(list.get(i).getTipoCompleto());
+            this.accept("delimitador_(");
+            this.accept("delimitador_("); //espera dois ( mesmo
+            if("numero".equals(list.get(i).getTipo()))
+            {
+                this.accept(list.get(i).getTipoCompleto());
+            }
             this.accept("delimitador_)");
             this.accept("delimitador_)");
-            if("(".equals(list.get(i).getLexema())) this.a();
+            this.a();
         }
-        
-        else if("identificador".equals(list.get(i).getTipo())) // ((id))A | ((id)) | ((acessa_matriz)) | ((acessa_matriz))A
+        else //aceita vazio
         {
-            this.accept(list.get(i).getTipoCompleto());
-            if("(".equals(list.get(i).getLexema()))
-            {
-                this.a();
-            }
-            if(")".equals(list.get(i).getLexema()))
-            {
-                this.accept("delimitador_)");
-                this.accept("delimitador_)");
-            }
-        }
-        else
-        {
-            this.accept(list.get(i).getTipoCompleto());
+            
         }
     }
     
     public void expressao_aritmetica(){
         
+        this.EOFTeste();
         this.mult_exp();
         this.expressao_aritmeticaRec();
         
@@ -439,6 +469,7 @@ public class Parser{
     
     public void mult_exp(){
         
+        this.EOFTeste();
         this.neg_exp();
         this.mult_expRec();
         
@@ -446,6 +477,7 @@ public class Parser{
     
     public void expressao_aritmeticaRec(){
         
+        this.EOFTeste();
         if("+".equals(list.get(i).getLexema()))
         {
             this.accept("op_arit_+");
@@ -464,15 +496,16 @@ public class Parser{
     
     public void mult_expRec(){
         
+        this.EOFTeste();
         if("*".equals(list.get(i).getLexema()))
         {
             this.accept("op_arit_*");
-            this.expressao_aritmetica();
+            this.mult_exp();
         }
         else if("/".equals(list.get(i).getLexema()))
         {
             this.accept("op_arit_/");
-            this.expressao_aritmetica();
+            this.mult_exp();
         }
         else //reconhece vazio
         {
@@ -482,38 +515,37 @@ public class Parser{
     
     public void neg_exp(){
         
+        this.EOFTeste();
         if("-".equals(list.get(i).getLexema()))
         {
             this.accept("op_arit_-");
         }
-        
         this.valor();
     }
     
     public void bloco_de_codigo(){
         
-        if("inicio".equals(list.get(i).getLexema()))
-        {
-            this.accept("pal_reserv_inicio");
-            this.bxr();
-            this.accept("pal_reserv_fim");
-        }
-        else this.bx();
+        this.EOFTeste();
+        this.accept("pal_reserv_inicio");
+        this.bxr();
+        this.accept("pal_reserv_fim");
+
     }
     
     public void bx(){
         
+        this.EOFTeste();
         if("se".equals(list.get(i).getLexema()))
         {
             this.se_entao_senao();
         }
         else if("var".equals(list.get(i).getLexema()))
         {
-            this.declaracao_var();
+            this.dec();
         }
         else if("identificador".equals(list.get(i).getTipo()))
         {
-            this.teste_id();
+            this.attr();
         }
         else if("enquanto".equals(list.get(i).getLexema()))
         {
@@ -527,25 +559,26 @@ public class Parser{
         {
             this.escreva();
         }
-        else this.accept(list.get(i).getTipoCompleto());
+        else //case default
+        {
+            erros.add("Início de bloco de código esperado na linha "+list.get(i).getLinha());
+        }
     }
     
     public void escreva(){
         
+        this.EOFTeste();
         this.accept("pal_reserv_escreva");
         this.accept("delimitador_(");
-        this.expressao();
-        
-    }
-    
-    public void expressao(){
-        
-        
+        this.retorno();
+        this.accept("delimitador_)");
+        this.accept("delimitador_;");
         
     }
     
     public void enquanto(){
         
+        this.EOFTeste();
         this.accept("pal_reserv_enquanto");
         this.accept("delimitador_(");
         this.expressao_booleana();
@@ -557,38 +590,43 @@ public class Parser{
     
     public void leia(){
         
+        this.EOFTeste();
         this.accept("pal_reserv_leia");
         this.accept("delimitador_(");
         this.exp();
+        this.accept("delimitador_)");
+        this.accept("delimitador_;");
         
     }
     
     public void exp(){
         
-        if("delimitador".equals(list.get(i).getTipo()))
+        this.EOFTeste();
+        if("identificador".equals(list.get(i).getTipo()))
         {
             this.accept(list.get(i).getTipoCompleto());
-            this.exp2();
         }
-        else
-        {
-            this.accept("delimitador_)");
-            this.accept("delimitador_;");
-        }
-
+        this.aux_valor4();
+        this.exp2();
     }
     
     public void exp2(){
         
+        this.EOFTeste();
         if(",".equals(list.get(i).getLexema()))
+        {
+            this.accept("delimitador_,");
+            this.exp();
+        }
+        else //aceita vazio
         {
             
         }
-        
     }
     
     public void bxr(){
         
+        this.EOFTeste();
         this.bx();
         this.bxr2();
         
@@ -596,6 +634,7 @@ public class Parser{
     
     public void bxr2(){
         
+        this.EOFTeste();
         if(
            "enquanto".equals(list.get(i).getLexema())       ||
            "escreva".equals(list.get(i).getLexema())        ||
@@ -607,16 +646,15 @@ public class Parser{
         {
             this.bxr();
         }
-        
         else //aceita vazio
         {
             
         }
-        
     }
     
     public void se_entao_senao(){
         
+        this.EOFTeste();
         this.accept("pal_reserv_se");
         this.accept("delimitador_(");
         this.expressao_booleana();
@@ -628,6 +666,7 @@ public class Parser{
     
     public void se(){
         
+        this.EOFTeste();
         if("senao".equals(list.get(i).getLexema()))
         {
             this.negacao();
@@ -640,6 +679,7 @@ public class Parser{
     
     public void negacao(){
         
+        this.EOFTeste();
         this.accept("pal_reserv_senao");
         this.bloco_de_codigo();
         
@@ -647,6 +687,7 @@ public class Parser{
     
     public void expressao_booleana(){
         
+        this.EOFTeste();
         this.aux_expression();
         this.expressao_booleanaRec();
         
@@ -654,38 +695,44 @@ public class Parser{
     
     public void aux_expression(){
         
+        this.EOFTeste();
         this.nao_expressao_aritmetica();
         this.aux_expressionRec();
         
     }
     
     public void aux_expressionRec(){
-            
+           
+        this.EOFTeste();
         if(">".equals(list.get(i).getLexema()))
         {
-            this.accept("op_relac_>");
-            if("=".equals(list.get(i).getLexema()))
-            {
-                this.accept("op_relac_=");
-            }
+            this.accept("delimitador_>");
             this.aux_expression();
         }
         else if("<".equals(list.get(i).getLexema()))
         {
-            this.accept("op_relac_<");
-            if("=".equals(list.get(i).getLexema()))
-            {
-                this.accept("op_relac_=");
-            }
-            else if(">".equals(list.get(i).getLexema()))
-            {
-                this.accept("op_relac_>");
-            }
+            this.accept("delimitador_<");
+            this.aux_expression();
+        }
+        else if("<=".equals(list.get(i).getLexema()))
+        {
+            this.accept("delimitador_<=");
+            this.aux_expression();
+        }
+        else if(">=".equals(list.get(i).getLexema()))
+        {
+            this.accept("delimitador_>=");
             this.aux_expression();
         }
         else if("=".equals(list.get(i).getLexema()))
         {
-            this.accept("op_relac_=");
+            this.accept("delimitador_=");
+            this.aux_expression();
+        }
+        else if("<>".equals(list.get(i).getLexema()))
+        {
+            this.accept("delimitador_<>");
+            this.aux_expression();
         }
         else //aceita vazio
         {
@@ -695,14 +742,15 @@ public class Parser{
     
     public void expressao_booleanaRec(){
         
+        this.EOFTeste();
         if("e".equals(list.get(i).getLexema()))
         {
-            this.accept("pal_reserv_e");
+            this.accept("op_logico_e");
             this.expressao_booleana();
         }
         else if("ou".equals(list.get(i).getLexema()))
         {
-            this.accept("pal_reserv_ou");
+            this.accept("op_logico_ou");
             this.expressao_booleana();
         }
         else //aceita vazio
@@ -713,57 +761,42 @@ public class Parser{
     
     public void nao_expressao_aritmetica(){
         
+        this.EOFTeste();
         if("nao".equals(list.get(i).getLexema()))
         {
-            this.accept("pal_reserv_nao");
+            this.accept("op_logico_nao");
             this.expressao_aritmetica();
         }
-        else if("(".equals(list.get(i).getLexema()))
-        {
-            this.accept("delimitador_(");
-            this.expressao_booleana();
-            this.accept("delimitador_)");
-        }
         else this.expressao_aritmetica();
-        
     }
     
-    public void declaracao_var(){
-        
-        this.decx();
-        
-    }
-    
-    public void decx(){
-        
-        this.dec();
-        
-        if("var".equals(list.get(i).getLexema()))
-        {
-            this.decx();
-        }
-        
-    }
+//    public void decx(){
+//        
+//        this.dec();
+//        if("var".equals(list.get(i).getLexema()))
+//        {
+//            this.decx();
+//        }
+//    }
     
     public void dec(){
         
+        this.EOFTeste();
         this.accept("pal_reserv_var");
         this.tipo();
-        this.cat();
-        if(";".equals(list.get(i).getLexema()))
+        if("identificador".equals(list.get(i).getTipo()))
         {
-            this.accept("delimitador_;");
+            this.accept(list.get(i).getTipoCompleto());
         }
-        if(",".equals(list.get(i).getLexema()))
-        {
-            this.accept("delimitador_,");
-            this.v1();
-        }
+        this.a();
+        this.v1();
+        this.accept("delimitador_;");
         
     }
     
     public void tipo(){
         
+        this.EOFTeste();
         if("inteiro".equals(list.get(i).getLexema()))
         {
             this.accept("pal_reserv_inteiro");
@@ -786,27 +819,12 @@ public class Parser{
         }
     }
     
-    public void declaracao_const(){
-        
-        this.constx();
-        
-    }
-    
-    public void constx(){
-        
-        this.dec_const();
-        if("const".equals(list.get(i).getLexema()))
-        {
-            this.constx();
-        }
-        
-    }
-    
     public void dec_const(){
         
+        this.EOFTeste();
         this.accept("pal_reserv_const");
         this.tipo();
-        if("delimitador".equals(list.get(i).getTipo()))
+        if("identificador".equals(list.get(i).getTipo()))
         {
             this.accept(list.get(i).getTipoCompleto());
         }
@@ -828,6 +846,68 @@ public class Parser{
         this.accept("delimitador_;");
     }
     
+    public void attr(){
+        
+        this.EOFTeste();
+        if("identificador".equals(list.get(i).getTipo()))
+        {
+            this.accept(list.get(i).getTipoCompleto());
+        }
+        this.aux_valor1();
+        this.attr1();
+        
+    }
+    
+    public void attr1(){
+        
+        this.EOFTeste();
+        if("=".equals(list.get(i).getLexema()))
+        {
+            this.accept("op_relac_=");
+            this.attr2();
+        }
+        else if(";".equals(list.get(i).getLexema()))
+        {
+            this.accept("delimitador_;");
+        }
+        else //case default
+        {
+            erros.add("Esperado = ou ; na linha "+list.get(i).getLinha());
+        }   
+    }
+    
+    public void attr2(){
+        
+        this.EOFTeste();
+        if //P(expressao_aritmetica)
+         (
+                "-".equals(list.get(i).getLexema())             ||
+                "(".equals(list.get(i).getLexema())             ||
+                "verdadeiro".equals(list.get(i).getLexema())    ||
+                "falso".equals(list.get(i).getLexema())         ||
+                "identificador".equals(list.get(i).getTipo())   ||
+                "numero".equals(list.get(i).getTipo())
+         )
+        {
+            this.expressao_aritmetica();
+            this.accept("delimitador_;");
+        }
+        else if("cadeia".equals(list.get(i).getTipo()))
+        {
+            this.accept(list.get(i).getTipoCompleto());
+            this.accept("delimitador_;");
+        }
+        else if("caractere".equals(list.get(i).getTipo()))
+        {
+            this.accept(list.get(i).getTipoCompleto());
+            this.accept("delimitador_;");
+        }
+        else //case default
+        {
+            erros.add("Esperado primeiro de expressão aritmética, uma cadeia ou um caractere na linha "+list.get(i).getLinha());
+        }
+        
+    }
 }
 
 /*
