@@ -6,10 +6,12 @@
 package Code.AnalisadorSintatico;
 
 import Code.Token;
-import Exceptions.TokenEsperadoException;
 import java.io.EOFException;
+import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -22,21 +24,36 @@ public class Parser{
     
     public Parser(List<Token> l){
         list = l;
+        list.add(new Token("$","$",l.get(l.size()-1).getLinha()));
         i = 0;
         erros = new ArrayList<>();
     }
     
-    public void EOFTeste()
-    {
-        if(i>=list.size())
-        {
-            erros.add("Fim de arquivo inesperado");
-            return;
+    public List<String> getErros(){
+        return erros;
+    }
+    
+    public void execute(){
+        erros = new ArrayList<>();
+        i = 0;
+        try {
+            program();
+        } catch (EOFException ex) {
+            erros.add("Erro: EOF Inesperado");
         }
     }
     
-    public boolean accept(String tipoToken){    
-
+    public void EOFTeste() throws EOFException    {
+        if(i>=list.size())
+        {
+            erros.add("Fim de arquivo inesperado");
+            throw new EOFException();
+        }
+    }
+    
+    public boolean accept(String tipoToken) throws EOFException{    
+    if(i>=list.size()) throw new EOFException();
+    if(list.get(i).getLexema().equals("$")) throw new EOFException();
     if(tipoToken.equals(list.get(i).getTipoCompleto())){
         i++;
         return true;
@@ -46,8 +63,7 @@ public class Parser{
         return false;
     }
     
-    
-    public void valor(){
+    public void valor()throws EOFException{
         
         this.EOFTeste();
         if("(".equals(list.get(i).getLexema()))
@@ -86,7 +102,7 @@ public class Parser{
         }
     }
     
-    public void aux_valor1(){
+    public void aux_valor1()throws EOFException{
         
         this.EOFTeste();
         if("(".equals(list.get(i).getLexema()))
@@ -100,7 +116,7 @@ public class Parser{
         }
     }
     
-    public void aux_valor2(){
+    public void aux_valor2()throws EOFException{
         
         this.EOFTeste();
         if("(".equals(list.get(i).getLexema()))
@@ -115,7 +131,7 @@ public class Parser{
         }
     }
     
-    public void aux_valor3(){
+    public void aux_valor3()throws EOFException{
         
         this.EOFTeste();
         this.valor();
@@ -125,7 +141,7 @@ public class Parser{
         
     }
     
-    public void aux_valor4(){
+    public void aux_valor4()throws EOFException{
         
         this.EOFTeste();
         if("(".equals(list.get(i).getLexema()))
@@ -143,7 +159,7 @@ public class Parser{
         }
     }
     
-    public void parametro(){
+    public void parametro()throws EOFException{
         
         this.EOFTeste();
         if("cadeia".equals(list.get(i).getTipo()))
@@ -174,7 +190,7 @@ public class Parser{
         }
     }
     
-    public void r(){
+    public void r()throws EOFException{
         
         this.EOFTeste();
         if(",".equals(list.get(i).getLexema()))
@@ -188,7 +204,7 @@ public class Parser{
         }
     }
     
-    public void program(){
+    public void program()throws EOFException{
        
        this.EOFTeste();
        this.declaracao_var_global();
@@ -197,7 +213,7 @@ public class Parser{
         
     }
     
-    public void declaracao_var_global(){
+    public void declaracao_var_global()throws EOFException{
         
         this.EOFTeste();
         if("const".equals(list.get(i).getLexema()))
@@ -216,7 +232,7 @@ public class Parser{
         }
     }
     
-    public void funcoes(){
+    public void funcoes()throws EOFException{
         
         this.EOFTeste();
         if("funcao".equals(list.get(i).getLexema()))
@@ -230,7 +246,7 @@ public class Parser{
         }
     }
     
-    public void fx(){
+    public void fx()throws EOFException{
         
         this.EOFTeste();
         if("funcao".equals(list.get(i).getLexema()))
@@ -243,7 +259,7 @@ public class Parser{
         }
     }
     
-    public void funcao(){
+    public void funcao()throws EOFException{
         
         this.EOFTeste();
         this.accept("pal_reserv_funcao");
@@ -265,7 +281,7 @@ public class Parser{
         
     }
     
-    public void d(){
+    public void d()throws EOFException{
         
         this.EOFTeste();
         this.tipo();
@@ -277,7 +293,7 @@ public class Parser{
         
     }
     
-    public void d2(){
+    public void d2()throws EOFException{
         
         this.EOFTeste();
         if(",".equals(list.get(i).getLexema()))
@@ -290,7 +306,7 @@ public class Parser{
         }
     }
     
-    public void q(){
+    public void q()throws EOFException{
         
         this.EOFTeste();
         this.accept("delimitador_,");
@@ -298,7 +314,7 @@ public class Parser{
         
     }
     
-    public void retorno(){
+    public void retorno()throws EOFException{
         
         this.EOFTeste();
         if("caractere".equals(list.get(i).getTipo()))
@@ -328,7 +344,7 @@ public class Parser{
         
     }
     
-    public void declaracao_programa(){
+    public void declaracao_programa()throws EOFException{
         
         this.EOFTeste();
         this.accept("pal_reserv_programa");
@@ -350,7 +366,7 @@ public class Parser{
         
     }
     
-    public void parametro_programa(){
+    public void parametro_programa()throws EOFException{
         
         this.EOFTeste();
         if( //P(tipo)
@@ -366,10 +382,7 @@ public class Parser{
             {
                 this.accept(list.get(i).getTipoCompleto());
             }
-            if(",".equals(list.get(i).getLexema())) //P(parametro3)
-            {
-                this.parametro3();
-            }
+            this.parametro2();
         }
         else //aceita vazio
         {
@@ -377,35 +390,27 @@ public class Parser{
         }
     }
     
-    public void parametro3(){
+    public void parametro2()throws EOFException{
+        this.EOFTeste();
+        if(",".equals(list.get(i).getLexema())) //P(parametro3)
+        {
+            this.parametro3();
+        }
+    }
+    
+    public void parametro3()throws EOFException{
         
         this.EOFTeste();
         this.accept("delimitador_,");
-        this.parametro_programa();
-        
+        this.tipo();
+        if("identificador".equals(list.get(i).getTipo()))
+        {
+            this.accept(list.get(i).getTipoCompleto());
+        }
+        this.parametro2();
     }
     
-//    public void bloco_declaracao_global(){
-//        
-//        if("const".equals(list.get(i).getLexema()))
-//        {
-//            this.declaracao_const();
-//            this.bloco_declaracao_global();
-//        }
-//        
-//        else if("var".equals(list.get(i).getLexema()))
-//        {
-//            this.declaracao_var();
-//            this.bloco_declaracao_global();
-//        }
-//        
-//        else //aceita vazio
-//        {
-//            
-//        }
-//    }
-    
-    public void v1(){
+    public void v1()throws EOFException{
         
         if(",".equals(list.get(i).getLexema()))
         {
@@ -423,22 +428,7 @@ public class Parser{
         }
     }
     
-//    public void cat(){
-//        
-//        if("delimitador".equals(list.get(i).getTipo()))
-//        {
-//            this.accept(list.get(i).getTipoCompleto());
-//            
-//            if("(".equals(list.get(i).getLexema()))
-//            {
-//                this.a();
-//            }
-//        }
-//        else this.accept(list.get(i).getTipoCompleto());
-//        
-//    }
-    
-    public void a(){
+    public void a()throws EOFException{
         
         this.EOFTeste();
         if("(".equals(list.get(i).getLexema()))
@@ -459,7 +449,7 @@ public class Parser{
         }
     }
     
-    public void expressao_aritmetica(){
+    public void expressao_aritmetica()throws EOFException{
         
         this.EOFTeste();
         this.mult_exp();
@@ -467,7 +457,7 @@ public class Parser{
         
     }
     
-    public void mult_exp(){
+    public void mult_exp()throws EOFException{
         
         this.EOFTeste();
         this.neg_exp();
@@ -475,7 +465,7 @@ public class Parser{
         
     }
     
-    public void expressao_aritmeticaRec(){
+    public void expressao_aritmeticaRec()throws EOFException{
         
         this.EOFTeste();
         if("+".equals(list.get(i).getLexema()))
@@ -494,7 +484,7 @@ public class Parser{
         }
     }
     
-    public void mult_expRec(){
+    public void mult_expRec()throws EOFException{
         
         this.EOFTeste();
         if("*".equals(list.get(i).getLexema()))
@@ -513,7 +503,7 @@ public class Parser{
         }
     }
     
-    public void neg_exp(){
+    public void neg_exp()throws EOFException{
         
         this.EOFTeste();
         if("-".equals(list.get(i).getLexema()))
@@ -523,7 +513,7 @@ public class Parser{
         this.valor();
     }
     
-    public void bloco_de_codigo(){
+    public void bloco_de_codigo()throws EOFException{
         
         this.EOFTeste();
         this.accept("pal_reserv_inicio");
@@ -532,7 +522,7 @@ public class Parser{
 
     }
     
-    public void bx(){
+    public void bx()throws EOFException{
         
         this.EOFTeste();
         if("se".equals(list.get(i).getLexema()))
@@ -565,7 +555,7 @@ public class Parser{
         }
     }
     
-    public void escreva(){
+    public void escreva()throws EOFException{
         
         this.EOFTeste();
         this.accept("pal_reserv_escreva");
@@ -576,7 +566,7 @@ public class Parser{
         
     }
     
-    public void enquanto(){
+    public void enquanto()throws EOFException{
         
         this.EOFTeste();
         this.accept("pal_reserv_enquanto");
@@ -588,7 +578,7 @@ public class Parser{
         
     }
     
-    public void leia(){
+    public void leia()throws EOFException{
         
         this.EOFTeste();
         this.accept("pal_reserv_leia");
@@ -599,7 +589,7 @@ public class Parser{
         
     }
     
-    public void exp(){
+    public void exp()throws EOFException{
         
         this.EOFTeste();
         if("identificador".equals(list.get(i).getTipo()))
@@ -610,7 +600,7 @@ public class Parser{
         this.exp2();
     }
     
-    public void exp2(){
+    public void exp2()throws EOFException{
         
         this.EOFTeste();
         if(",".equals(list.get(i).getLexema()))
@@ -624,7 +614,7 @@ public class Parser{
         }
     }
     
-    public void bxr(){
+    public void bxr()throws EOFException{
         
         this.EOFTeste();
         this.bx();
@@ -632,7 +622,7 @@ public class Parser{
         
     }
     
-    public void bxr2(){
+    public void bxr2()throws EOFException{
         
         this.EOFTeste();
         if(
@@ -652,7 +642,7 @@ public class Parser{
         }
     }
     
-    public void se_entao_senao(){
+    public void se_entao_senao()throws EOFException{
         
         this.EOFTeste();
         this.accept("pal_reserv_se");
@@ -664,7 +654,7 @@ public class Parser{
         this.se();
     }
     
-    public void se(){
+    public void se()throws EOFException{
         
         this.EOFTeste();
         if("senao".equals(list.get(i).getLexema()))
@@ -677,7 +667,7 @@ public class Parser{
         }
     }
     
-    public void negacao(){
+    public void negacao()throws EOFException{
         
         this.EOFTeste();
         this.accept("pal_reserv_senao");
@@ -685,7 +675,7 @@ public class Parser{
         
     }
     
-    public void expressao_booleana(){
+    public void expressao_booleana()throws EOFException{
         
         this.EOFTeste();
         this.aux_expression();
@@ -693,7 +683,7 @@ public class Parser{
         
     }
     
-    public void aux_expression(){
+    public void aux_expression()throws EOFException{
         
         this.EOFTeste();
         this.nao_expressao_aritmetica();
@@ -701,7 +691,7 @@ public class Parser{
         
     }
     
-    public void aux_expressionRec(){
+    public void aux_expressionRec()throws EOFException{
            
         this.EOFTeste();
         if(">".equals(list.get(i).getLexema()))
@@ -740,7 +730,7 @@ public class Parser{
         }
     }
     
-    public void expressao_booleanaRec(){
+    public void expressao_booleanaRec()throws EOFException{
         
         this.EOFTeste();
         if("e".equals(list.get(i).getLexema()))
@@ -759,7 +749,7 @@ public class Parser{
         }
     }
     
-    public void nao_expressao_aritmetica(){
+    public void nao_expressao_aritmetica()throws EOFException{
         
         this.EOFTeste();
         if("nao".equals(list.get(i).getLexema()))
@@ -770,16 +760,7 @@ public class Parser{
         else this.expressao_aritmetica();
     }
     
-//    public void decx(){
-//        
-//        this.dec();
-//        if("var".equals(list.get(i).getLexema()))
-//        {
-//            this.decx();
-//        }
-//    }
-    
-    public void dec(){
+    public void dec()throws EOFException{
         
         this.EOFTeste();
         this.accept("pal_reserv_var");
@@ -794,7 +775,7 @@ public class Parser{
         
     }
     
-    public void tipo(){
+    public void tipo()throws EOFException{
         
         this.EOFTeste();
         if("inteiro".equals(list.get(i).getLexema()))
@@ -819,7 +800,7 @@ public class Parser{
         }
     }
     
-    public void dec_const(){
+    public void dec_const()throws EOFException{
         
         this.EOFTeste();
         this.accept("pal_reserv_const");
@@ -846,7 +827,7 @@ public class Parser{
         this.accept("delimitador_;");
     }
     
-    public void attr(){
+    public void attr()throws EOFException{
         
         this.EOFTeste();
         if("identificador".equals(list.get(i).getTipo()))
@@ -858,7 +839,7 @@ public class Parser{
         
     }
     
-    public void attr1(){
+    public void attr1()throws EOFException{
         
         this.EOFTeste();
         if("=".equals(list.get(i).getLexema()))
@@ -876,7 +857,7 @@ public class Parser{
         }   
     }
     
-    public void attr2(){
+    public void attr2()throws EOFException{
         
         this.EOFTeste();
         if //P(expressao_aritmetica)
@@ -909,173 +890,3 @@ public class Parser{
         
     }
 }
-
-/*
-
-! -------------------------------------------------
-! Character Sets
-! -------------------------------------------------
-
-{ID Head}        = {Letter}
-{ID Tail}        = {Alphanumeric} + [_]
-{IdAlphaNumeric} = {Alphanumeric}
-{dot}            =[.]
-{quote}          =['']
-{String Char}    = {Printable} - ["]    
-{ID NUM}         = {Digit} 
-! -------------------------------------------------
-! Terminals
-! -------------------------------------------------
-
-BooleanLiteral   = 'verdadeiro' | 'falso'
-Identificador    = {ID Head}{IdAlphaNumeric}*|{ID Head}[_]{IdAlphaNumeric}*
-numero           ={Digit}+ |{Digit}+[.]{Digit}+
-tipo_cadeia      = ["]{Letter}{Alphanumeric}*["]
-tipo_caractere   ={quote}[qazwsxedcrfvtgbyhnujmikolpAZQWSXCDEVFRTGBNHYUJMKILOP0123456789]{quote}
-! -------------------------------------------------
-! Rules
-! -------------------------------------------------
-
-!Configurações Iniciais
-<bloco_de_codigo>    ::='inicio'<BXR>'fim'|<BX>
-<BX>                 ::= <se_entao_senao>|<declaracao_var>|<TESTE_ID>|<Enquanto>|<Leia>|<Escreva>
-<BXR>                ::= <BX><BXR2>
-<BXR2>               ::= <BXR> | 
-
-! The grammar starts below
-
-<Program> ::= <BLOCO_DECLARACAO_GLOBAL><declaracao_programa><FX>|<BLOCO_DECLARACAO_GLOBAL><declaracao_programa>|<declaracao_programa>
-<FX>      ::=<Funcao><FX>|<Funcao>
-
-!Declaracao de Programa
-
-<declaracao_programa>::='programa'<tipo> <id>'('<parametro_programa>')''inicio'<BXR>'fim'<return>
-<parametro_programa> ::=<tipo> <id> <parametro3> |<tipo> <id>
-<parametro3>         ::=','<parametro_programa> 
-<RETORNO>            ::=<expressao_booleana>|tipo_caractere|tipo_cadeia|
-
-!Correcao de Conflito
-<id> ::= Identificador
-       
-!Expressão Booleana
-
-<expressao_booleana>  ::= <Aux_Expression> <expressao_booleanaR> 
-              
-<expressao_booleanaR>  ::= 'e' <expressao_booleana>
-               |'ou' <expressao_booleana>
-               |
-               
-<Aux_Expression>  ::= <nao_expressao_aritmetica> <Aux_ExpressionR>
-                   
-<Aux_ExpressionR> ::= '>'  <Aux_Expression>
-               | '<'  <Aux_Expression> 
-               | '<='  <Aux_Expression>
-               | '>='  <Aux_Expression>
-               | '='  <Aux_Expression>
-               | '<>'  <Aux_Expression>
-               |  
-
-
-<nao_expressao_aritmetica> ::= 'nao' <expressao_aritmetica> 
-                            | <expressao_aritmetica> 
-                            | '(' <expressao_booleana> ')'
-                            
-!Expressão Aritmetica
-
-<expressao_aritmetica>     ::= <Mult Exp> <expressao_aritmeticaR>
-
-<expressao_aritmeticaR>    ::= '+' <expressao_aritmetica>
-               | '-' <expressao_aritmetica>
-               |
-
-<Mult Exp>    ::= <Neg Exp> <Mult ExpR>
-               
-<Mult ExpR>   ::= '*' <Mult Exp>
-               | '/' <Mult Exp>
-               |
-
-
-<Neg Exp>  ::= '-' <Valor> 
-               |  <Valor> 
-
-!Add more values to the rule below - as needed
-
-<Valor>       ::= <id>
-               | numero
-               |  '(' <expressao_aritmetica> ')'
-               | BooleanLiteral
-               |<chamada_funcao>
-               |<acessa_matriz>
-               
-
-!Enquanto Faca
-
- <Enquanto>::='enquanto''('<expressao_booleana>')''faca'<bloco_de_codigo> 
-
-!Se Entao Senao
-
-<se_entao_senao>   ::='se' '('<expressao_booleana>')' 'entao'<bloco_de_codigo><SE>
-           <SE>   ::= <NEGACAO>|       
-<NEGACAO>          ::='senao'<bloco_de_codigo>
-
-!Chamada de Função
-
-!<chamada_funcao>::= <id>'('<parametro>')'
-<chamada_funcao>::='('<parametro>
-<parametro>     ::= <Valor><R> |tipo_cadeia<R>|<acessa_matriz><R>|tipo_caractere<R>|')'';'
-<R>             ::=','<parametro> | ')'';'
-
-!Atribuicao
-
-!<Attr> ::= <id> '='<AttR2>
-<Attr> ::= '='<AttR2>
-<declaracao_matriz>::=<A>'='<AttR2>
-<acessa_matriz>::=<id><A>
-<AttR2>::= numero';'| <id>';' |<expressao_aritmetica>';'|tipo_cadeia';'|tipo_caractere';'|BooleanLiteral';'|<chamada_funcao>';'|<acessa_matriz>';'
-          
-
-!Correcao de Conflito
-                        
-<Teste_ID>::=<id><TESTE_ID2>
-<TESTE_ID2>::=<Attr>|<chamada_funcao>|<declaracao_matriz>
-            
-! Declaração de Variaveis
-
-<DEC>  ::='var'<tipo><CAT>';' | 'var'<tipo><CAT>','<V1> 
-<V1>   ::=<CAT>','<V1> | <CAT>';'  !alteracao
-<CAT>  ::= <id> | <id><A>
-<A>    ::= '(''('numero')'')'<A>|'(''('<id>')'')'<A> |'(''('<acessa_matriz>')'')'<A>|'(''('numero')'')'|'(''('<id>')'')'|'(''('<acessa_matriz>')'')'
-<tipo> ::='inteiro' | 'cadeia' |'real'|'booleano'|'caractere'
-
-!declaracao
-
-<declaracao_var>   ::=<DECX>
-      <DECX>       ::=<DEC><DECX>|<DEC>
- <declaracao_const>::=<CONSTX>
-          <CONSTX> ::=<DEC_CONST><CONSTX>|<DEC_CONST>             
-!Declaração de constante
-<DEC_CONST>::='const' <tipo> <id> '=' <valor>';'
-
-<BLOCO_DECLARACAO_GLOBAL>::=<declaracao_var><BLOCO_DECLARACAO_GLOBAL>|<declaracao_const><BLOCO_DECLARACAO_GLOBAL>|
-                          
-!Leia
-
-<Leia>  ::='leia''('<Exp>
-<Exp>::=<id>')'';'| <id><FATOR_LEIA> |')'';'
-<FATOR_LEIA>  ::=','<Exp>
-
-!Escreva
-
-<Escreva>  ::='escreva''('<EXPRESSAO>
-<EXPRESSAO>::=<RETORNO>')'';'|<RETORNO><FATOR_ESCREVA>|<expressao_booleana>')'';'|<expressao_booleana><FATOR_ESCREVA>
-<FATOR_ESCREVA>  ::=','<EXPRESSAO>
-
-!Funcoes
-      
- <Funcao>      ::='funcao' <tipo> <id> '('<D>')' 'inicio'<BXR> 'fim'<return>
- <return>::='('<RETORNO>')'';'|<RETORNO>
- <D>      ::=<tipo><id><Q> |<tipo><id>
- <Q>      ::=','<D>
-
-
-*/

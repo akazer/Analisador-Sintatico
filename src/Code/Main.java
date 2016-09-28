@@ -6,6 +6,7 @@ package Code;
  * and open the template in the editor.
  */
 
+import Code.AnalisadorSintatico.Parser;
 import Exceptions.MalformadoException;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -16,6 +17,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.List;
 
 class Main { 
   public static void main(String[] args) {
@@ -58,35 +60,39 @@ class Main {
                                   token_line.add(linha+1);
                               } catch (MalformadoException ex) {
                                   if(ex.getToken().getTipo().equals("invalido")){
-                                      bw.write(ex.getToken().getLexema()+"  "+ex.getToken().getTipo()+" na linha "+(linha+1)+"\n");
-                                      bw.newLine();
+                                      //bw.write(ex.getToken().getLexema()+"  "+ex.getToken().getTipo()+" na linha "+(linha+1)+"\n");
+                                      //bw.newLine();
                                   }
                                   else{
-                                      bw.write(ex.getToken().getLexema()+": "+ex.getToken().getTipo()+" malformado na linha "+(linha+1)+"\n");
-                                      bw.newLine();
+                                      //bw.write(ex.getToken().getLexema()+": "+ex.getToken().getTipo()+" malformado na linha "+(linha+1)+"\n");
+                                      //bw.newLine();
                                   }
                               }
                               i++;
                           }
                       linha++;
                     }
-                    bw.newLine();
-                    bw.newLine();
-                    bw.append("\n\n --- Tokens Encontrados ---\n");
-                    bw.newLine();
-                    for(int i=0;i<tokens.size();i++){
-                        bw.write(tokens.get(i).getLexema()+" | Tipo: "+
-                                tokens.get(i).getTipo()+"\n"+" | Linha: "+token_line.get(i));
-                        bw.newLine();
-                    }
+//                    bw.newLine();
+//                    bw.newLine();
+//                    bw.append("\n\n --- Tokens Encontrados ---\n");
+//                    bw.newLine();
+//                    for(int i=0;i<tokens.size();i++){
+//                        bw.write(tokens.get(i).getLexema()+" | Tipo: "+
+//                                tokens.get(i).getTipo()+"\n"+" | Linha: "+tokens.get(i).getLinha());
+//                        bw.newLine();
+//                    }
               }
           
               // Analise Sintatica
               
-              
-              
-              
-              
+              Parser p = new Parser(tokens);
+              p.execute();
+              List<String> lk = p.getErros();
+              bw.append("\n\n --- Erros Sintáticos ---\n");
+              for(String hj: lk){
+                  bw.write(hj);
+                  bw.newLine();
+              }
               br.close();
               fr.close();
               bw.close();
