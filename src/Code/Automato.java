@@ -2,8 +2,11 @@ package Code;
 
 import Exceptions.MalformadoException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Automato {
+    
+    private static List<Token> erros = new ArrayList<>();
     
     static String palavrasReservadas[] = {"programa","const","var","funcao","inicio",
                                     "fim","se","entao","senao","enquanto","faca",
@@ -194,17 +197,24 @@ public class Automato {
     }
     
     //Reconhecendo estados finais
-    if(t==null) throw new MalformadoException(new Token(teste, "invalido",linha));
-    
+    if(t==null){
+        erros.add( new Token(teste, "invalido",linha));
+        throw new MalformadoException(new Token(teste, "invalido",linha));
+    }
         switch (estadoAtual) {
             case 1:
                 for(String a: palavrasReservadas)
                     if(a.equals(teste))
-                        return new Token(teste, "pal_reserv",linha);
+                        if(a.equals("e")||a.equals("ou")||a.equals("nao"))
+                            return new Token(teste, "op_logico",linha);
+                        else
+                            return new Token(teste, "pal_reserv",linha);
                 break;
                 
             case -1:
+                erros.add(t);
                 throw new MalformadoException(t);
+                
         }
         return t;
     }

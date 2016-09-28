@@ -7,6 +7,7 @@ package Code.AnalisadorSintatico;
 
 import Code.Token;
 import Exceptions.TokenEsperadoException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,17 +17,19 @@ import java.util.List;
 public class Parser{
     List<Token> list;
     Integer i;
+    List<String> erros;
     
     public Parser(List<Token> l){
         list = l;
         i = 0;
+        erros = new ArrayList<>();
     }
     
-    public boolean accept(String tipoToken) throws TokenEsperadoException{
+    public boolean accept(String tipoToken) {
         if(tipoToken.equals(list.get(i).getTipoCompleto())){
             i++;
         } else {
-            throw new TokenEsperadoException(tipoToken);
+            erros.add("Token "+tipoToken+" esperado na linha "+list.get(i).getLinha());
         }
         return false;
     }
@@ -276,24 +279,6 @@ public class Parser{
             this.escreva();
         }
         else this.accept(list.get(i).getTipoCompleto());
-    }
-    
-    public void teste_id() throws TokenEsperadoException{
-        
-        if("delimitador".equals(list.get(i).getTipo()))
-        {
-            this.accept(list.get(i).getTipoCompleto());
-        }
-        this.teste_id2();
-    }
-    
-    public void teste_id2(){ //fazer depois
-        
-        if("=".equals(list.get(i).getLexema()))
-        {
-            
-        }
-        
     }
     
     public void escreva() throws TokenEsperadoException{

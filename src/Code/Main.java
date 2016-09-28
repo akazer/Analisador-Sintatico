@@ -41,7 +41,8 @@ class Main {
               ArrayList<Token> tokens = new ArrayList<Token>();
               ArrayList<Integer> token_line = new ArrayList<Integer>();
               
-              bw.write("--- Lista de Erros ---");
+              
+              // Analise Lexica
               bw.newLine();
               
               while(br.ready()){
@@ -79,6 +80,12 @@ class Main {
                         bw.newLine();
                     }
               }
+          
+              // Analise Sintatica
+              
+              
+              
+              
               
               br.close();
               fr.close();
