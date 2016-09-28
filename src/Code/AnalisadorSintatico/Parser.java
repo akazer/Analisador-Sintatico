@@ -132,7 +132,7 @@ public class Parser{
         {
             this.accept(list.get(i).getTipoCompleto());
         }
-        else if(
+        else if( //P(expressao_booleana)
                 "-".equals(list.get(i).getLexema())             ||
                 "(".equals(list.get(i).getLexema())             ||
                 "verdadeiro".equals(list.get(i).getLexema())    ||
@@ -212,6 +212,65 @@ public class Parser{
         this.retorno();
         this.accept("delimitador_)");
         this.accept("delimitador_;");
+        
+    }
+    
+    public void d(){
+        
+        this.tipo();
+        if("identificador".equals(list.get(i).getTipo()))
+        {
+            this.accept(list.get(i).getTipoCompleto());
+        }
+        this.d2();
+        
+    }
+    
+    public void d2(){
+        
+        if(",".equals(list.get(i).getLexema()))
+        {
+            this.q();
+        }
+        else //aceita vazio
+        {
+            
+        }
+    }
+    
+    public void q(){
+        
+        this.accept("delimitador_,");
+        this.d();
+        
+    }
+    
+    public void retorno(){
+        
+        if("caractere".equals(list.get(i).getTipo()))
+        {
+            this.accept(list.get(i).getTipoCompleto());
+        }
+        else if("cadeia".equals(list.get(i).getTipo()))
+        {
+            this.accept(list.get(i).getTipoCompleto());
+        }
+        else if( //P(expressao_booleana)
+                "-".equals(list.get(i).getLexema())             ||
+                "(".equals(list.get(i).getLexema())             ||
+                "verdadeiro".equals(list.get(i).getLexema())    ||
+                "falso".equals(list.get(i).getLexema())         ||
+                "identificador".equals(list.get(i).getLexema()) ||
+                "nao".equals(list.get(i).getLexema())           ||
+                "numero".equals(list.get(i).getLexema())
+               )
+        {
+            this.expressao_booleana();
+        }
+        else //aceita vazio
+        {
+            
+        }
         
     }
     
