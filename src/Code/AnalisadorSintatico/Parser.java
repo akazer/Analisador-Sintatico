@@ -26,11 +26,23 @@ public class Parser{
     }
     
     public boolean accept(String tipoToken) {
-        if(tipoToken.equals(list.get(i).getTipoCompleto())){
-            i++;
-        } else {
-            erros.add("Token "+tipoToken+" esperado na linha "+list.get(i).getLinha());
-        }
+        
+    if(tipoToken.equals(list.get(i).getTipoCompleto())){
+        i++;
+        return true;
+    } else {
+            
+    if(
+        "identificador".equals(list.get(i).getTipo()) ||
+        "cadeia".equals(list.get(i).getTipo())        ||
+        "caractere".equals(list.get(i).getTipo())     ||
+        "numero".equals(list.get(i).getTipo())
+       )
+    {
+        erros.add("Token "+list.get(i).getTipo()+" esperado na linha "+list.get(i).getLinha());
+    }
+    else erros.add("Token "+tipoToken+" esperado na linha "+list.get(i).getLinha());
+    }
         return false;
     }
     
@@ -39,7 +51,6 @@ public class Parser{
         if("(".equals(list.get(i).getLexema()))
         {
             this.accept("delimitador_(");
-            
             this.expressao_booleana();
             this.accept("delimitador_)");
         }
@@ -69,7 +80,7 @@ public class Parser{
         
         else //case default
         {
-            this.accept(list.get(i).getTipoCompleto());
+            this.accept(list.get(i).getTipoCompleto()); //OU JÁ DECLARAR ERRO AQUI
         }
     }
     
@@ -295,7 +306,38 @@ public class Parser{
         
     }
     
+    public void parametro_programa(){
+        
+        if( //P(tipo)
+            "booleano".equals(list.get(i).getLexema())   ||
+            "cadeia".equals(list.get(i).getTipo())       ||
+            "caractere".equals(list.get(i).getTipo())    ||
+            "inteiro".equals(list.get(i).getLexema())    ||
+            "real".equals(list.get(i).getLexema())
+           )
+        {
+            this.tipo();
+            if("identificador".equals(list.get(i).getTipo()))
+            {
+                this.accept(list.get(i).getTipoCompleto());
+            }
+            if(",".equals(list.get(i).getLexema())) //P(parametro3)
+            {
+                this.parametro3();
+            }
+        }
+        else //aceita vazio
+        {
+            
+        }
+    }
     
+    public void parametro3(){
+        
+        this.accept("delimitador_,");
+        this.parametro_programa();
+        
+    }
     
     public void bloco_declaracao_global(){
         
