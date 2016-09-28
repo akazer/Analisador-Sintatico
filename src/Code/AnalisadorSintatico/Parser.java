@@ -40,7 +40,7 @@ public class Parser{
         {
             this.accept("delimitador_(");
             
-            this.expressao_aritmetica(); //adicionar chamada_funcao
+            this.expressao_booleana();
             this.accept("delimitador_)");
         }
         
@@ -58,7 +58,8 @@ public class Parser{
         
         else if("identificador".equals(list.get(i).getTipo()))
         {
-            this.accept(list.get(i).getTipoCompleto()); //adicionar chamada_matriz
+            this.accept(list.get(i).getTipoCompleto());
+            this.aux_valor1();
         }
         
         else if("numero".equals(list.get(i).getTipo()))
@@ -70,6 +71,88 @@ public class Parser{
         {
             this.accept(list.get(i).getTipoCompleto());
         }
+    }
+    
+    public void aux_valor1(){
+        
+        if("(".equals(list.get(i).getLexema()))
+        {
+            this.accept("delimitador_(");
+            this.aux_valor2();
+        }
+        else //aceita vazio
+        {
+            
+        }
+    }
+    
+    public void aux_valor2(){
+        
+        if("(".equals(list.get(i).getLexema()))
+        {
+            this.accept("delimitador_(");
+            this.aux_valor3();
+        }
+        else
+        {
+            this.parametro();
+            this.accept("delimitador_)");
+        } 
+    }
+    
+    public void aux_valor3(){
+        
+        this.valor();
+        this.accept("delimitador_)");
+        this.accept("delimitador_)");
+        this.aux_valor4();
+        
+    }
+    
+    public void aux_valor4(){
+        
+        if("(".equals(list.get(i).getLexema()))
+        {
+            this.accept("delimitador_(");
+            this.accept("delimitador_(");
+            this.valor();
+            this.accept("delimitador_)");
+            this.accept("delimitador_)");
+            this.aux_valor4();
+        }
+        else //aceita vazio
+        {
+            
+        }
+    }
+    
+    public void parametro(){
+        
+        if("cadeia".equals(list.get(i).getTipo()))
+        {
+            this.accept(list.get(i).getTipoCompleto());
+        }
+        else if(
+                "-".equals(list.get(i).getLexema())             ||
+                "(".equals(list.get(i).getLexema())             ||
+                "verdadeiro".equals(list.get(i).getLexema())    ||
+                "falso".equals(list.get(i).getLexema())         ||
+                "identificador".equals(list.get(i).getLexema()) ||
+                "nao".equals(list.get(i).getLexema())           ||
+                "numero".equals(list.get(i).getLexema())
+               )
+        {
+            this.expressao_booleana();
+            this.r();
+        }
+        else if("caractere".equals(list.get(i).getTipo()))
+        {
+            this.accept(list.get(i).getTipoCompleto());
+            this.r();
+        }
+        
+        
+        
     }
     
     public void program(){
