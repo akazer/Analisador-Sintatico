@@ -35,7 +35,7 @@ public class Parser{
     }
     
     
-    public void valor() throws TokenEsperadoException{
+    public void valor(){
         if("(".equals(list.get(i).getLexema()))
         {
             this.accept("delimitador_(");
@@ -72,7 +72,7 @@ public class Parser{
         }
     }
     
-    public void program() throws TokenEsperadoException{
+    public void program(){
         
         if("const".equals(list.get(i).getLexema()) || "var".equals(list.get(i).getLexema()))
         {
@@ -90,7 +90,7 @@ public class Parser{
         
     }
     
-    public void bloco_declaracao_global() throws TokenEsperadoException{
+    public void bloco_declaracao_global(){
         
         if("const".equals(list.get(i).getLexema()))
         {
@@ -110,7 +110,7 @@ public class Parser{
         }
     }
     
-    public void v1() throws TokenEsperadoException{
+    public void v1(){
         
         this.cat();
         
@@ -134,7 +134,7 @@ public class Parser{
         
     }
     
-    public void cat() throws TokenEsperadoException{
+    public void cat(){
         
         if("delimitador".equals(list.get(i).getTipo()))
         {
@@ -149,7 +149,7 @@ public class Parser{
         
     }
     
-    public void a() throws TokenEsperadoException{
+    public void a(){
         
         this.accept("delimitador_(");
         this.accept("delimitador_("); //espera dois ( mesmo
@@ -181,21 +181,21 @@ public class Parser{
         }
     }
     
-    public void expressao_aritmetica() throws TokenEsperadoException{
+    public void expressao_aritmetica(){
         
         this.mult_exp();
         this.expressao_aritmeticaRec();
         
     }
     
-    public void mult_exp() throws TokenEsperadoException{
+    public void mult_exp(){
         
         this.neg_exp();
         this.mult_expRec();
         
     }
     
-    public void expressao_aritmeticaRec() throws TokenEsperadoException{
+    public void expressao_aritmeticaRec(){
         
         if("+".equals(list.get(i).getLexema()))
         {
@@ -213,7 +213,7 @@ public class Parser{
         }
     }
     
-    public void mult_expRec() throws TokenEsperadoException{
+    public void mult_expRec(){
         
         if("*".equals(list.get(i).getLexema()))
         {
@@ -231,7 +231,7 @@ public class Parser{
         }
     }
     
-    public void neg_exp() throws TokenEsperadoException{
+    public void neg_exp(){
         
         if("-".equals(list.get(i).getLexema()))
         {
@@ -241,7 +241,7 @@ public class Parser{
         this.valor();
     }
     
-    public void bloco_de_codigo() throws TokenEsperadoException{
+    public void bloco_de_codigo(){
         
         if("inicio".equals(list.get(i).getLexema()))
         {
@@ -252,7 +252,7 @@ public class Parser{
         else this.bx();
     }
     
-    public void bx() throws TokenEsperadoException{
+    public void bx(){
         
         if("se".equals(list.get(i).getLexema()))
         {
@@ -281,7 +281,7 @@ public class Parser{
         else this.accept(list.get(i).getTipoCompleto());
     }
     
-    public void escreva() throws TokenEsperadoException{
+    public void escreva(){
         
         this.accept("pal_reserv_escreva");
         this.accept("delimitador_(");
@@ -295,7 +295,7 @@ public class Parser{
         
     }
     
-    public void enquanto() throws TokenEsperadoException{
+    public void enquanto(){
         
         this.accept("pal_reserv_enquanto");
         this.accept("delimitador_(");
@@ -306,7 +306,7 @@ public class Parser{
         
     }
     
-    public void leia() throws TokenEsperadoException{
+    public void leia(){
         
         this.accept("pal_reserv_leia");
         this.accept("delimitador_(");
@@ -314,7 +314,7 @@ public class Parser{
         
     }
     
-    public void exp() throws TokenEsperadoException{
+    public void exp(){
         
         if("delimitador".equals(list.get(i).getTipo()))
         {
@@ -338,14 +338,14 @@ public class Parser{
         
     }
     
-    public void bxr() throws TokenEsperadoException{
+    public void bxr(){
         
         this.bx();
         this.bxr2();
         
     }
     
-    public void bxr2() throws TokenEsperadoException{
+    public void bxr2(){
         
         if(
            "enquanto".equals(list.get(i).getLexema())       ||
@@ -366,7 +366,7 @@ public class Parser{
         
     }
     
-    public void se_entao_senao() throws TokenEsperadoException{
+    public void se_entao_senao(){
         
         this.accept("pal_reserv_se");
         this.accept("delimitador_(");
@@ -377,7 +377,7 @@ public class Parser{
         this.se();
     }
     
-    public void se() throws TokenEsperadoException{
+    public void se(){
         
         if("senao".equals(list.get(i).getLexema()))
         {
@@ -389,28 +389,28 @@ public class Parser{
         }
     }
     
-    public void negacao() throws TokenEsperadoException{
+    public void negacao(){
         
         this.accept("pal_reserv_senao");
         this.bloco_de_codigo();
         
     }
     
-    public void expressao_booleana() throws TokenEsperadoException{
+    public void expressao_booleana(){
         
         this.aux_expression();
         this.expressao_booleanaRec();
         
     }
     
-    public void aux_expression() throws TokenEsperadoException{
+    public void aux_expression(){
         
         this.nao_expressao_aritmetica();
         this.aux_expressionRec();
         
     }
     
-    public void aux_expressionRec() throws TokenEsperadoException{
+    public void aux_expressionRec(){
             
         if(">".equals(list.get(i).getLexema()))
         {
@@ -444,7 +444,7 @@ public class Parser{
         }
     }
     
-    public void expressao_booleanaRec() throws TokenEsperadoException{
+    public void expressao_booleanaRec(){
         
         if("e".equals(list.get(i).getLexema()))
         {
@@ -462,7 +462,7 @@ public class Parser{
         }
     }
     
-    public void nao_expressao_aritmetica() throws TokenEsperadoException{
+    public void nao_expressao_aritmetica(){
         
         if("nao".equals(list.get(i).getLexema()))
         {
@@ -479,13 +479,13 @@ public class Parser{
         
     }
     
-    public void declaracao_var() throws TokenEsperadoException{
+    public void declaracao_var(){
         
         this.decx();
         
     }
     
-    public void decx() throws TokenEsperadoException{
+    public void decx(){
         
         this.dec();
         
@@ -496,7 +496,7 @@ public class Parser{
         
     }
     
-    public void dec() throws TokenEsperadoException{
+    public void dec(){
         
         this.accept("pal_reserv_var");
         this.tipo();
@@ -513,7 +513,7 @@ public class Parser{
         
     }
     
-    public void tipo() throws TokenEsperadoException{
+    public void tipo(){
         
         if("inteiro".equals(list.get(i).getLexema()))
         {
@@ -537,13 +537,13 @@ public class Parser{
         }
     }
     
-    public void declaracao_const() throws TokenEsperadoException{
+    public void declaracao_const(){
         
         this.constx();
         
     }
     
-    public void constx() throws TokenEsperadoException{
+    public void constx(){
         
         this.dec_const();
         if("const".equals(list.get(i).getLexema()))
@@ -553,7 +553,7 @@ public class Parser{
         
     }
     
-    public void dec_const() throws TokenEsperadoException{
+    public void dec_const(){
         
         this.accept("pal_reserv_const");
         this.tipo();
