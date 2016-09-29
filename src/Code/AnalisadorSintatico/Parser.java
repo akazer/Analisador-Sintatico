@@ -74,7 +74,7 @@ public class Parser{
             i++;
         }while(b);
         
-    }
+    }   
     
     public void valor()throws EOFException{
         
@@ -244,8 +244,12 @@ public class Parser{
             
         }
         
-        if(i>0) i--;
-        syncLexema(";");
+        if(i>0){ 
+            i--;
+            syncLexema(";","programa");
+            if(list.get(i-1).getLexema().equals("programa"))
+                i--;
+        }
     }
     
     public void funcoes()throws EOFException{
@@ -569,8 +573,9 @@ public class Parser{
         {
             erros.add("Erro na linha "+list.get(i).getLinha());
         }
-        if(i>0) i--;
+        if(i>0){ i--;
         syncLexema(";");
+        }
     }
     
     public void escreva()throws EOFException{
