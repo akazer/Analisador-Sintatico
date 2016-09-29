@@ -54,13 +54,26 @@ public class Parser{
     public boolean accept(String tipoToken) throws EOFException{    
     if(i>=list.size()) throw new EOFException();
     if(list.get(i).getLexema().equals("$")) throw new EOFException();
-    if(tipoToken.equals(list.get(i).getTipoCompleto())){
+    if(tipoToken.equals(list.get(i).getTipoCompleto()) ||
+       tipoToken.equals(list.get(i).getLexema())     ){
         i++;
         return true;
     } else {
         erros.add("Token "+tipoToken+" esperado na linha "+list.get(i).getLinha());
     }
         return false;
+    }
+    
+    public void syncLexema(String... string) throws EOFException{
+        boolean b = true;
+        do{
+            this.EOFTeste();
+            for(String s: string)
+                if(s.equals(list.get(i).getLexema()))
+                    b=false;
+            i++;
+        }while(b);
+        
     }
     
     public void valor()throws EOFException{
@@ -230,6 +243,9 @@ public class Parser{
         {
             
         }
+        
+        if(i>0) i--;
+        syncLexema(";");
     }
     
     public void funcoes()throws EOFException{
@@ -551,8 +567,10 @@ public class Parser{
         }
         else //case default
         {
-            erros.add("Início de bloco de código esperado na linha "+list.get(i).getLinha());
+            erros.add("Erro na linha "+list.get(i).getLinha());
         }
+        if(i>0) i--;
+        syncLexema(";");
     }
     
     public void escreva()throws EOFException{
@@ -853,7 +871,7 @@ public class Parser{
         }
         else //case default
         {
-            erros.add("Esperado = ou ; na linha "+list.get(i).getLinha());
+            erros.add("Erro na linha "+list.get(i).getLinha());
         }   
     }
     
@@ -885,7 +903,7 @@ public class Parser{
         }
         else //case default
         {
-            erros.add("Esperado primeiro de expressão aritmética, uma cadeia ou um caractere na linha "+list.get(i).getLinha());
+            erros.add("Erro na linha "+list.get(i).getLinha());
         }
         
     }

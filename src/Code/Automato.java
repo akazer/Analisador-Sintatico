@@ -16,6 +16,8 @@ public class Automato {
     public static Token reconhecerToken(String teste, Integer linha) throws MalformadoException{
         int ch = 0, estadoAtual = 0;
         Token t = null;
+        teste = " "+teste;
+        teste = teste.trim();
     
     while(ch<teste.length() && estadoAtual!= -1){
         Character c = teste.charAt(ch);

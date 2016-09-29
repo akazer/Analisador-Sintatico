@@ -51,7 +51,7 @@ class Main {
                     ArrayList<String> lista;
                     int linha=0;
                     while(br.ready()){
-                          lista = Automato.splitTokens(br.readLine().trim());
+                          lista = Automato.splitTokens(br.readLine());
                           int i=0;
                           
                           while(i<lista.size()){
@@ -88,7 +88,9 @@ class Main {
               Parser p = new Parser(tokens);
               p.execute();
               List<String> lk = p.getErros();
-              bw.append("\n\n --- Erros Sintáticos ---\n");
+              if(lk.isEmpty()) bw.append("\nAnálise Sintática Concluida com Sucesso!\n");
+              else bw.append("\n\n --- Erros Sintáticos ---\n");
+              bw.newLine();
               for(String hj: lk){
                   bw.write(hj);
                   bw.newLine();
