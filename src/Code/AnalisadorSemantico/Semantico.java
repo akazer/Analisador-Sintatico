@@ -33,7 +33,7 @@ public class Semantico {
     
     public void preRun(){
         
-        //testeeeeeeeeeeeeeeeeeeeeeeeeeeeeee porraaaaaaaaaaaaa
+        //testeeeeeeeeeeeeeeeeeeeeeeeeeeeeee porraaaaaaaaaaaaa sem palavrao por favor
         
     }
     
