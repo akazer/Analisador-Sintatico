@@ -114,7 +114,6 @@ public class Parser{
             erros.add("Valor esperado na linha " + list.get(i).getLinha());
         }
     }
-    
     public void aux_valor1()throws EOFException{
         
         this.EOFTeste();
@@ -127,8 +126,7 @@ public class Parser{
         {
             
         }
-    }
-    
+    }    
     public void aux_valor2()throws EOFException{
         
         this.EOFTeste();
@@ -143,7 +141,6 @@ public class Parser{
             this.accept("delimitador_)");
         }
     }
-    
     public void aux_valor3()throws EOFException{
         
         this.EOFTeste();
@@ -153,7 +150,6 @@ public class Parser{
         this.aux_valor4();
         
     }
-    
     public void aux_valor4()throws EOFException{
         
         this.EOFTeste();
@@ -171,7 +167,6 @@ public class Parser{
             
         }
     }
-    
     public void parametro()throws EOFException{
         
         this.EOFTeste();
@@ -202,9 +197,12 @@ public class Parser{
             
         }
     }
-    
     public void r()throws EOFException{
-        
+        if(i+1 <= list.size()){
+            if(",".equals(list.get(i).getLexema())&&
+               ")".equals(list.get(i+1).getLexema()))
+                    erros.add("Valor esperado na linha "+list.get(i).getLinha());
+        }
         this.EOFTeste();
         if(",".equals(list.get(i).getLexema()))
         {
@@ -216,7 +214,6 @@ public class Parser{
             
         }
     }
-    
     public void program()throws EOFException{
        
        this.EOFTeste();
@@ -225,7 +222,6 @@ public class Parser{
        this.funcoes();
         
     }
-    
     public void declaracao_var_global()throws EOFException{
         
         this.EOFTeste();
@@ -251,7 +247,6 @@ public class Parser{
                 i--;
         }
     }
-    
     public void funcoes()throws EOFException{
         
         this.EOFTeste();
@@ -265,7 +260,6 @@ public class Parser{
             
         }
     }
-    
     public void fx()throws EOFException{
         
         this.EOFTeste();
@@ -278,7 +272,6 @@ public class Parser{
             
         }
     }
-    
     public void funcao()throws EOFException{
         
         this.EOFTeste();
@@ -300,7 +293,6 @@ public class Parser{
         this.accept("delimitador_;");
         
     }
-    
     public void d()throws EOFException{
         
         this.EOFTeste();
@@ -312,7 +304,6 @@ public class Parser{
         this.d2();
         
     }
-    
     public void d2()throws EOFException{
         
         this.EOFTeste();
@@ -325,15 +316,17 @@ public class Parser{
             
         }
     }
-    
     public void q()throws EOFException{
-        
+        if(i+1 <= list.size()){
+            if(",".equals(list.get(i).getLexema())&&
+               ")".equals(list.get(i+1).getLexema()))
+                    erros.add("Valor esperado na linha "+list.get(i).getLinha());
+        }
         this.EOFTeste();
         this.accept("delimitador_,");
         this.d();
         
     }
-    
     public void retorno()throws EOFException{
         
         this.EOFTeste();
@@ -363,7 +356,6 @@ public class Parser{
         }
         
     }
-    
     public void declaracao_programa()throws EOFException{
         
         this.EOFTeste();
@@ -385,7 +377,6 @@ public class Parser{
         this.accept("delimitador_;");
         
     }
-    
     public void parametro_programa()throws EOFException{
         
         this.EOFTeste();
@@ -409,7 +400,6 @@ public class Parser{
             
         }
     }
-    
     public void parametro2()throws EOFException{
         this.EOFTeste();
         if(",".equals(list.get(i).getLexema())) //P(parametro3)
@@ -417,9 +407,12 @@ public class Parser{
             this.parametro3();
         }
     }
-    
     public void parametro3()throws EOFException{
-        
+        if(i+1 <= list.size()){
+            if(",".equals(list.get(i).getLexema())&&
+               ")".equals(list.get(i+1).getLexema()))
+                    erros.add("Valor esperado na linha "+list.get(i).getLinha());
+        }
         this.EOFTeste();
         this.accept("delimitador_,");
         this.tipo();
@@ -429,9 +422,12 @@ public class Parser{
         }
         this.parametro2();
     }
-    
     public void v1()throws EOFException{
-        
+        if(i+1 <= list.size()){
+            if(",".equals(list.get(i).getLexema())&&
+               ")".equals(list.get(i+1).getLexema()))
+                    erros.add("Valor esperado na linha "+list.get(i).getLinha());
+        }
         if(",".equals(list.get(i).getLexema()))
         {
             this.accept("delimitador_,");
@@ -447,7 +443,6 @@ public class Parser{
             
         }
     }
-    
     public void a()throws EOFException{
         
         this.EOFTeste();
@@ -468,7 +463,6 @@ public class Parser{
             
         }
     }
-    
     public void expressao_aritmetica()throws EOFException{
         
         this.EOFTeste();
@@ -476,7 +470,6 @@ public class Parser{
         this.expressao_aritmeticaRec();
         
     }
-    
     public void mult_exp()throws EOFException{
         
         this.EOFTeste();
@@ -484,7 +477,6 @@ public class Parser{
         this.mult_expRec();
         
     }
-    
     public void expressao_aritmeticaRec()throws EOFException{
         
         this.EOFTeste();
@@ -503,7 +495,6 @@ public class Parser{
             
         }
     }
-    
     public void mult_expRec()throws EOFException{
         
         this.EOFTeste();
@@ -522,7 +513,6 @@ public class Parser{
             
         }
     }
-    
     public void neg_exp()throws EOFException{
         
         this.EOFTeste();
@@ -532,7 +522,6 @@ public class Parser{
         }
         this.valor();
     }
-    
     public void bloco_de_codigo()throws EOFException{
         
         this.EOFTeste();
@@ -541,7 +530,6 @@ public class Parser{
         this.accept("pal_reserv_fim");
 
     }
-    
     public void bx()throws EOFException{
         
         this.EOFTeste();
@@ -577,7 +565,6 @@ public class Parser{
         syncLexema(";");
         }
     }
-    
     public void escreva()throws EOFException{
         
         this.EOFTeste();
@@ -588,7 +575,6 @@ public class Parser{
         this.accept("delimitador_;");
         
     }
-    
     public void enquanto()throws EOFException{
         
         this.EOFTeste();
@@ -600,7 +586,6 @@ public class Parser{
         this.bloco_de_codigo();
         
     }
-    
     public void leia()throws EOFException{
         
         this.EOFTeste();
@@ -611,7 +596,6 @@ public class Parser{
         this.accept("delimitador_;");
         
     }
-    
     public void exp()throws EOFException{
         
         this.EOFTeste();
@@ -622,9 +606,12 @@ public class Parser{
         this.aux_valor4();
         this.exp2();
     }
-    
     public void exp2()throws EOFException{
-        
+        if(i+1 <= list.size()){
+            if(",".equals(list.get(i).getLexema())&&
+               ")".equals(list.get(i+1).getLexema()))
+                    erros.add("Valor esperado na linha "+list.get(i).getLinha());
+        }
         this.EOFTeste();
         if(",".equals(list.get(i).getLexema()))
         {
@@ -636,7 +623,6 @@ public class Parser{
             
         }
     }
-    
     public void bxr()throws EOFException{
         
         this.EOFTeste();
@@ -644,7 +630,6 @@ public class Parser{
         this.bxr2();
         
     }
-    
     public void bxr2()throws EOFException{
         
         this.EOFTeste();
@@ -664,7 +649,6 @@ public class Parser{
             
         }
     }
-    
     public void se_entao_senao()throws EOFException{
         
         this.EOFTeste();
@@ -676,7 +660,6 @@ public class Parser{
         this.bloco_de_codigo();
         this.se();
     }
-    
     public void se()throws EOFException{
         
         this.EOFTeste();
@@ -689,7 +672,6 @@ public class Parser{
             
         }
     }
-    
     public void negacao()throws EOFException{
         
         this.EOFTeste();
@@ -697,7 +679,6 @@ public class Parser{
         this.bloco_de_codigo();
         
     }
-    
     public void expressao_booleana()throws EOFException{
         
         this.EOFTeste();
@@ -705,7 +686,6 @@ public class Parser{
         this.expressao_booleanaRec();
         
     }
-    
     public void aux_expression()throws EOFException{
         
         this.EOFTeste();
@@ -713,7 +693,6 @@ public class Parser{
         this.aux_expressionRec();
         
     }
-    
     public void aux_expressionRec()throws EOFException{
            
         this.EOFTeste();
@@ -752,7 +731,6 @@ public class Parser{
             
         }
     }
-    
     public void expressao_booleanaRec()throws EOFException{
         
         this.EOFTeste();
@@ -771,7 +749,6 @@ public class Parser{
             
         }
     }
-    
     public void nao_expressao_aritmetica()throws EOFException{
         
         this.EOFTeste();
@@ -782,7 +759,6 @@ public class Parser{
         }
         else this.expressao_aritmetica();
     }
-    
     public void dec()throws EOFException{
         
         this.EOFTeste();
@@ -797,7 +773,6 @@ public class Parser{
         this.accept("delimitador_;");
         
     }
-    
     public void tipo()throws EOFException{
         
         this.EOFTeste();
@@ -822,7 +797,6 @@ public class Parser{
             this.accept("pal_reserv_caractere");
         }
     }
-    
     public void dec_const()throws EOFException{
         
         this.EOFTeste();
