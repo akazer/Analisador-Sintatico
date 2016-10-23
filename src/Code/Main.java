@@ -41,8 +41,7 @@ class Main {
               BufferedWriter bw = new BufferedWriter(fw);
               
               ArrayList<Token> tokens = new ArrayList<Token>();
-              ArrayList<Integer> token_line = new ArrayList<Integer>();
-              
+              ArrayList<String> erros_lexicos = new ArrayList<>();
               
               // Analise Lexica
               bw.newLine();
@@ -57,15 +56,12 @@ class Main {
                           while(i<lista.size()){
                               try {
                                   tokens.add(Automato.reconhecerToken(lista.get(i).trim(),linha+1));
-                                  token_line.add(linha+1);
                               } catch (MalformadoException ex) {
                                   if(ex.getToken().getTipo().equals("invalido")){
-                                      //bw.write(ex.getToken().getLexema()+"  "+ex.getToken().getTipo()+" na linha "+(linha+1)+"\n");
-                                      //bw.newLine();
+                                      erros_lexicos.add(ex.getToken().getLexema()+"  "+ex.getToken().getTipo()+" na linha "+(linha+1)+"\n");
                                   }
                                   else{
-                                      //bw.write(ex.getToken().getLexema()+": "+ex.getToken().getTipo()+" malformado na linha "+(linha+1)+"\n");
-                                      //bw.newLine();
+                                      erros_lexicos.add(ex.getToken().getLexema()+": "+ex.getToken().getTipo()+" malformado na linha "+(linha+1)+"\n");
                                   }
                               }
                               i++;
@@ -82,7 +78,20 @@ class Main {
 //                        bw.newLine();
 //                    }
               }
-          
+              
+              if(!erros_lexicos.isEmpty()){
+                  bw.append("Analise Lexica concluida com erros\n\nErros:");
+                  bw.newLine();
+                  for(String erro: erros_lexicos){
+                      bw.write(erro);
+                      bw.newLine();
+                  }
+              } else {
+                  bw.append("Analise Lexica concluida sucesso!");
+                  bw.newLine();
+              }
+                  
+              
               // Analise Sintatica
               
               Parser p = new Parser(tokens);
@@ -95,6 +104,9 @@ class Main {
                   bw.write(hj);
                   bw.newLine();
               }
+              
+              //Inserir Analise Semantica Aqui
+              
               br.close();
               fr.close();
               bw.close();
