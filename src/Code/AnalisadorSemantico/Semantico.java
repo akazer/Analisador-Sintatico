@@ -16,7 +16,7 @@ public class Semantico {
     
     List<Token> list;
     List<Token> outraList;
-    Integer i;
+    Integer i, j;
     List<String> erros;
     Tree escopos;
     ArrayList<Simbolo> tabelaSimbolos;
@@ -33,7 +33,41 @@ public class Semantico {
     
     public void preRun(){
         
-        //testeeeeeeeeeeeeeeeeeeeeeeeeeeeeee porraaaaaaaaaaaaa sem palavrao por favor
+        int escopotemp = 0;
+        
+        while(!"$".equals(outraList.get(j).getLexema()))
+        {
+            if("pal_reserv_var".equals(outraList.get(j).getTipoCompleto()))
+            {
+                j++;
+                if("pal_reserv_inteiro".equals(outraList.get(j).getTipoCompleto()))
+                {
+                    j++;
+                    tabelaSimbolos.add(new Simbolo(outraList.get(j).getLexema(), "var", "inteiro", escopotemp));
+                    while(!"delimitador_;".equals(outraList.get(j).getTipoCompleto()))
+                    {
+                        if("delimitador_,".equals(outraList.get(j).getTipoCompleto()))
+                        {
+                            tabelaSimbolos.add(new Simbolo(outraList.get(j+1).getLexema(), "var", "inteiro", escopotemp));
+                        }
+                        j++;
+                    }
+                }
+                if("pal_reserv_real".equals(outraList.get(j).getTipoCompleto()))
+                {
+                    j++;
+                    tabelaSimbolos.add(new Simbolo(outraList.get(j).getLexema(), "var", "real", escopotemp));
+                }
+                while(!"delimitador_;".equals(outraList.get(j).getTipoCompleto()))
+                {
+                    if("delimitador_,".equals(outraList.get(j).getTipoCompleto()))
+                    {
+                        tabelaSimbolos.add(new Simbolo(outraList.get(j+1).getLexema(), "var", "real", escopotemp));
+                    }
+                    j++;
+                }
+            }
+        }
         
     }
     
