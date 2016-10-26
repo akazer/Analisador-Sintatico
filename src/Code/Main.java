@@ -80,7 +80,7 @@ class Main {
               }
               
               if(!erros_lexicos.isEmpty()){
-                  bw.append("Analise Lexica concluida com erros\n\nErros:");
+                  bw.append("Analise Lexica concluida com erros\n\n");
                   bw.newLine();
                   for(String erro: erros_lexicos){
                       bw.write(erro);
