@@ -95,6 +95,16 @@ class Main {
               // Analise Sintatica
               
               Parser p = new Parser(tokens);
+              
+              //imprimir tokens
+//              List<Token> lista = p.getTokens();
+//              bw.append("--Tokens--\n");
+//              bw.newLine();
+//              for(Token t: lista){
+//                  bw.append(t.getLinha()+", "+t.getTipoCompleto());
+//                  bw.newLine();
+//              }
+              
               p.execute();
               List<String> lk = p.getErros();
               if(lk.isEmpty()) bw.append("\nAnálise Sintática Concluida com Sucesso!\n");

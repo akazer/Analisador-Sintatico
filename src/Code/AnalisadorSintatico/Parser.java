@@ -25,12 +25,28 @@ public class Parser{
     public Parser(List<Token> l){
         list = l;
         list.add(new Token("$","$",l.get(l.size()-1).getLinha()));
+        
+        for(int j=0; j<l.size()-2;j++){
+            if(l.get(j).getLexema().equals("*")&&l.get(j+1).getLexema().equals("/")){
+                l.remove(j);
+                l.remove(j);
+                l.add(j, new Token("*/", "op_matriz", l.get(j+1).getLinha()));
+            } else if(l.get(j).getLexema().equals("/")&&l.get(j+1).getLexema().equals("*")){
+                l.remove(j);
+                l.remove(j);
+                l.add(j, new Token("/*", "op_matriz", l.get(j+1).getLinha()));
+            }
+        }
         i = 0;
         erros = new ArrayList<>();
     }
     
     public List<String> getErros(){
         return erros;
+    }
+    
+    public List<Token> getTokens(){
+        return list;
     }
     
     public void execute(){
@@ -120,6 +136,13 @@ public class Parser{
         if("(".equals(list.get(i).getLexema()))
         {
             this.accept("delimitador_(");
+            this.parametro();
+            this.accept("delimitador_)");
+        } else if("/*".equals(list.get(i).getLexema()))
+        {
+            this.accept("op_matriz_/*");
+            this.expressao_aritmetica();
+            this.accept("op_matriz_*/");
             this.aux_valor2();
         }
         else //aceita vazio
@@ -130,37 +153,11 @@ public class Parser{
     public void aux_valor2()throws EOFException{
         
         this.EOFTeste();
-        if("(".equals(list.get(i).getLexema()))
+        if("/*".equals(list.get(i).getLexema()))
         {
-            this.accept("delimitador_(");
-            this.aux_valor3();
-        }
-        else 
-        {
-            this.parametro();
-            this.accept("delimitador_)");
-        }
-    }
-    public void aux_valor3()throws EOFException{
-        
-        this.EOFTeste();
-        this.valor();
-        this.accept("delimitador_)");
-        this.accept("delimitador_)");
-        this.aux_valor4();
-        
-    }
-    public void aux_valor4()throws EOFException{
-        
-        this.EOFTeste();
-        if("(".equals(list.get(i).getLexema()))
-        {
-            this.accept("delimitador_(");
-            this.accept("delimitador_(");
-            this.valor();
-            this.accept("delimitador_)");
-            this.accept("delimitador_)");
-            this.aux_valor4();
+            this.accept("/*");
+            this.expressao_booleana();
+            this.accept("*/");
         }
         else //aceita vazio
         {
@@ -296,12 +293,18 @@ public class Parser{
     public void d()throws EOFException{
         
         this.EOFTeste();
-        this.tipo();
-        if("identificador".equals(list.get(i).getTipo()))
-        {
-            this.accept(list.get(i).getTipoCompleto());
-        }
-        this.d2();
+        if("booleano".equals(list.get(i).getLexema())||
+           "cadeia".equals(list.get(i).getLexema())||
+           "caractere".equals(list.get(i).getLexema())||
+           "inteiro".equals(list.get(i).getLexema())||
+           "real".equals(list.get(i).getLexema())){
+                this.tipo();
+                if("identificador".equals(list.get(i).getTipo()))
+                {
+                    this.accept(list.get(i).getTipoCompleto());
+                }
+                this.d2();
+        }        
         
     }
     public void d2()throws EOFException{
@@ -446,16 +449,14 @@ public class Parser{
     public void a()throws EOFException{
         
         this.EOFTeste();
-        if("(".equals(list.get(i).getLexema()))
+        if("/*".equals(list.get(i).getLexema()))
         {
-            this.accept("delimitador_(");
-            this.accept("delimitador_("); //espera dois ( mesmo
+            this.accept("op_matriz_/*"); //espera dois ( mesmo
             if("numero".equals(list.get(i).getTipo()))
             {
                 this.accept(list.get(i).getTipoCompleto());
             }
-            this.accept("delimitador_)");
-            this.accept("delimitador_)");
+            this.accept("op_matriz_*/");
             this.a();
         }
         else //aceita vazio
@@ -597,14 +598,13 @@ public class Parser{
         
     }
     public void exp()throws EOFException{
-        
         this.EOFTeste();
         if("identificador".equals(list.get(i).getTipo()))
         {
             this.accept(list.get(i).getTipoCompleto());
+            this.aux_valor1();
+            this.exp2();
         }
-        this.aux_valor4();
-        this.exp2();
     }
     public void exp2()throws EOFException{
         if(i+1 <= list.size()){
@@ -822,8 +822,7 @@ public class Parser{
         }
         
         this.accept("delimitador_;");
-    }
-    
+    }  
     public void attr()throws EOFException{
         
         this.EOFTeste();
@@ -831,11 +830,30 @@ public class Parser{
         {
             this.accept(list.get(i).getTipoCompleto());
         }
-        this.aux_valor1();
-        this.attr1();
+        this.attr0();
         
     }
-    
+    public void attr0()throws EOFException{
+        
+        this.EOFTeste();
+        if("(".equals(list.get(i).getLexema()))
+        {
+            this.accept("delimitador_(");
+            this.parametro();
+            this.accept("delimitador_)");
+            this.accept("delimitador_;");
+        } else if("/*".equals(list.get(i).getLexema()))
+        {
+            this.accept("op_matriz_/*");
+            this.valor();
+            this.accept("op_matriz_*/");
+            this.attr1();
+        } else {
+            this.attr1();
+        }
+        
+        
+    }
     public void attr1()throws EOFException{
         
         this.EOFTeste();
@@ -843,17 +861,11 @@ public class Parser{
         {
             this.accept("op_relac_=");
             this.attr2();
-        }
-        else if(";".equals(list.get(i).getLexema()))
-        {
-            this.accept("delimitador_;");
-        }
-        else //case default
+        } else //case default
         {
             erros.add("Erro na linha "+list.get(i).getLinha());
         }   
     }
-    
     public void attr2()throws EOFException{
         
         this.EOFTeste();
