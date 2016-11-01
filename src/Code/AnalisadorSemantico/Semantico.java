@@ -126,21 +126,129 @@ public class Semantico {
     
     public void atribuicao()
     {
-        while(!t.getLexema().equals("="))
+        while(t.getLexema().equals("="))
         {
             t = outraList.get(++pos);
         }
-        
+        if(tipo.equals("real"))
+        {
+            while(!t.getLexema().equals(";"))
+            {
+                if(t.getTipo().equals("identificador"))
+                {
+                    if(!tabelaSimbolos.get(t.getLexema()).tipo.equals("real") && !tabelaSimbolos.get(t.getLexema()).equals("inteiro"))
+                    {
+                        erros.add("Esperado tipo real ou inteiro para atribuicao na linha " + t.getLinha());
+                    }
+                }
+                else if(t.getTipo().equals("numero_real") || t.getTipo().equals("numero_inteiro"))
+                {
+                    //aceita
+                }
+                else
+                {
+                    erros.add("Esperado tipo real ou inteiro para atribuicao na linha " + t.getLinha());
+                }
+                t = outraList.get(++pos);
+            }
+        }
+        else if(tipo.equals("cadeia"))
+        {
+            while(!t.getLexema().equals(";"))
+            {
+                if(t.getTipo().equals("identificador"))
+                {
+                    if(!tabelaSimbolos.get(t.getLexema()).tipo.equals("cadeia") && !tabelaSimbolos.get(t.getLexema()).equals("caractere"))
+                    {
+                        erros.add("Esperado tipo cadeia ou caractere para atribuicao na linha " + t.getLinha());
+                    }
+                }
+                else if(t.getTipo().equals("cadeia") || t.getTipo().equals("caractere"))
+                {
+                    //aceita
+                }
+                else
+                {
+                    erros.add("Esperado tipo cadeia ou caractere para atribuicao na linha " + t.getLinha());
+                }
+                t = outraList.get(++pos);
+            }
+        }
+        else //inteiro caractere ou booleano
+        {
+            while(!t.getLexema().equals(";"))
+            {
+                if(t.getTipo().equals("identificador"))
+                {
+                    if(!tabelaSimbolos.get(t.getLexema()).tipo.equals(tipo))
+                    {
+                        erros.add("Esperado tipo " + tipo + " para atribuicao na linha " + t.getLinha());
+                    }
+                }
+                else if(tipo.equals("numero_inteiro"))
+                {
+                    if(!t.getTipo().equals("numero_inteiro")) erros.add("Esperado tipo inteiro para atribuicao na linha " + t.getLinha());
+                }
+                else if(tipo.equals("booleano"))
+                {
+                    if(!t.getTipo().equals("booleano")) erros.add("Esperado tipo booleano para atribuicao na linha " + t.getLinha());
+                }
+                else if(tipo.equals("caractere"))
+                {
+                    if(!t.getTipo().equals("caractere")) erros.add("Esperado tipo caractere para atribuicao na linha " + t.getLinha());
+                }
+                t = outraList.get(++pos);
+            }
+        }
     }
     
-    public void chamadaFuncao()
+    public void chamadaFuncao(String idFuncao)
     {
-        
+        Simbolo s = tabelaSimbolos.get(idFuncao);
+        if(s==null){
+            erros.add("Função inexistente na linha "+t.getLinha());
+            while(!t.getLexema().equals(")")){
+                t = outraList.get(++pos);
+            }
+            return;
+        }
+        while(!t.getLexema().equals(")")){
+           t = outraList.get(++pos);
+           int parametro = 0;
+           if(t.getTipo().equals("identificador")){
+               //if()
+           } else if(t.getTipo().equals("numero_real")){
+               
+           }else if(t.getTipo().equals("numero_inteiro")){
+               
+           }else if(t.getTipo().equals("cadeia")){
+               
+           }else if(t.getTipo().equals("caractere")){
+               
+           }else if(t.getTipo().equals("booleano")){
+               
+           }
+           
+        }
     }
     
     public void acessaMatriz()
     {
-        
+        while(!t.getLexema().equals("*/")){
+           t = outraList.get(++pos);
+           if(t.getTipo().equals("identificador")){
+               Simbolo s = tabelaSimbolos.get(t.getLexema());
+               if(s==null){
+                   erros.add("Variavel não declarada na linha "+t.getLinha());
+               } else {
+                   if(!s.tipo.equals("inteiro")){
+                       erros.add("Tipo de variavel incompativel na linha "+t.getLinha());
+                   }
+               }
+           } else if(!t.getTipo().equals("numero_inteiro")){
+               erros.add("Valor não esperado na linha "+t.getLinha());
+           }
+        }
     }
     
     public void leia()
