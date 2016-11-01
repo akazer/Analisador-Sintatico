@@ -26,7 +26,7 @@ public class Semantico {
     Map<String,Simbolo> tabelaSimbolos;
     int j, jmax, pos;
     Token t;
-    
+    String tipo;
 
     public Semantico(List<Token> l){
         list = l;
@@ -56,7 +56,7 @@ public class Semantico {
                     t.setTipo("numero_inteiro");
                 }
             } else if(t.getLexema().equals("funcao")){
-                String tipo = outraList.get(++pos).getLexema();
+                tipo = outraList.get(++pos).getLexema();
                 pos++;
                 Simbolo novaFuncao = new Simbolo(t.getLexema(), tipo, "funcao", j);
                 tabelaSimbolos.put(t.getLexema(),novaFuncao);
@@ -93,7 +93,7 @@ public class Semantico {
                 }
                 j = q.poll();
             } else if(t.getLexema().equals("var")){
-                String tipo = outraList.get(++pos).getLexema();
+                tipo = outraList.get(++pos).getLexema();
                 while(!t.getLexema().equals(";")){
                     t = outraList.get(++pos);
                     if(t.getTipo().equals("identificador")){
@@ -126,6 +126,10 @@ public class Semantico {
     
     public void atribuicao()
     {
+        while(!t.getLexema().equals("="))
+        {
+            t = outraList.get(++pos);
+        }
         
     }
     
