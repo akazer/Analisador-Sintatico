@@ -58,8 +58,16 @@ public class Semantico {
                 while(!t.getLexema().equals(";")){                    
                     t = outraList.get(++pos);
                     if(t.getTipo().equals("identificador")){
-                        if(outraList.get(++pos).getLexema().equals("/*")){
-                            //TO DO HARDCORE
+                        if(outraList.get(pos+1).getLexema().equals("/*")){
+                            Token t2 = outraList.get(pos);
+                            Simbolo s = new Simbolo(t.getLexema(), tipo, "matriz", j);
+                            while(t2.getLexema().equals(",")||t2.getLexema().equals(";")){
+                                if(outraList.get(pos).getLexema().equals("/*")){
+                                    t2 = outraList.get(++pos);
+                                    s.addDimensoes(Integer.parseInt(t2.getLexema()));
+                                }
+                                t2 = outraList.get(++pos);
+                            }
                         } else tabelaSimbolos.put(j,new Simbolo(t.getLexema(), tipo, "variavel", j));
                     }
                 }
