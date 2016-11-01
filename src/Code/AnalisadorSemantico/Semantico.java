@@ -205,7 +205,7 @@ public class Semantico {
     public void chamadaFuncao(String idFuncao)
     {
         Simbolo s = tabelaSimbolos.get(idFuncao);
-        if(s==null){
+        if(s==null || !s.tipoId.equals("funcao")){
             erros.add("Função inexistente na linha "+t.getLinha());
             while(!t.getLexema().equals(")")){
                 t = outraList.get(++pos);
@@ -216,17 +216,58 @@ public class Semantico {
            t = outraList.get(++pos);
            int parametro = 0;
            if(t.getTipo().equals("identificador")){
-               //if()
+               String l = s.parametros.get(parametro);
+               if(l==null){
+                   erros.add("Parametro inexistente na linha "+t.getLinha());
+               }else if(t.getTipo().equals(l)){
+                   erros.add("Parametro com tipo incompativel na linha "+t.getLinha());
+               }
+               parametro++;
            } else if(t.getTipo().equals("numero_real")){
-               
+               String l = s.parametros.get(parametro);
+               if(l==null){
+                   erros.add("Parametro inexistente na linha "+t.getLinha());
+               } else if(!l.equals("real") && !l.equals("inteiro"))
+               {
+                   erros.add("Parametro incompatível na linha " +t.getLinha() + ". Esperado número real ou inteiro.");
+               }
+               parametro++;
            }else if(t.getTipo().equals("numero_inteiro")){
-               
+               String l = s.parametros.get(parametro);
+               if(l==null){
+                   erros.add("Parametro inexistente na linha " +t.getLinha());
+               }else if(!l.equals("inteiro"))
+               {
+                   erros.add("Parametro incompatível na linha " +t.getLinha() + ". Esperado número inteiro.");
+               }
+               parametro++;
            }else if(t.getTipo().equals("cadeia")){
-               
+               String l = s.parametros.get(parametro);
+               if(l==null){
+                   erros.add("Parametro inexistente na linha "+t.getLinha());
+               }else if(!l.equals("cadeia") && !l.equals("caractere"))
+               {
+                   erros.add("Parametro incompatível na linha " +t.getLinha() + ". Esperado cadeia ou caractere.");
+               }
+               parametro++;
            }else if(t.getTipo().equals("caractere")){
-               
+               String l = s.parametros.get(parametro);
+               if(l==null){
+                   erros.add("Parametro inexistente na linha "+t.getLinha());
+               }else if(!l.equals("caractere"))
+               {
+                   erros.add("Parametro incompatível na linha " +t.getLinha() + ". Esperado caractere.");
+               }
+               parametro++;
            }else if(t.getTipo().equals("booleano")){
-               
+               String l = s.parametros.get(parametro);
+               if(l==null){
+                   erros.add("Parametro inexistente na linha "+t.getLinha());
+               }else if(!l.equals("booleano"))
+               {
+                   erros.add("Parametro incompatível na linha " +t.getLinha() + ". Esperado booleano.");
+               }
+               parametro++;
            }
            
         }
