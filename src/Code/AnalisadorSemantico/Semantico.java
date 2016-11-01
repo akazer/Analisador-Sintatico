@@ -113,7 +113,7 @@ public class Semantico {
                     }
                 }
             } else if(t.getLexema().equals("const")){
-                String tipo = outraList.get(++pos).getLexema();
+                tipo = outraList.get(++pos).getLexema();
                 while(!t.getLexema().equals(";")){                    
                     t = outraList.get(++pos);
                     if(t.getTipo().equals("identificador")){
@@ -145,12 +145,32 @@ public class Semantico {
     
     public void leia()
     {
-        
+        while(!t.getLexema().equals(";")){
+           t = outraList.get(++pos);
+           if(t.getTipo().equals("identificador")){
+               Simbolo s = tabelaSimbolos.get(t.getLexema());
+               if(s==null){
+                   erros.add("Variavel não declarada na linha "+t.getLinha());
+               } else {
+                   if(s.tipo.equals("booleano")){
+                       erros.add("Variavel booleana não aceita na linha "+t.getLinha());
+                   }
+               }
+           }
+        }   
     }
     
     public void escreva()
     {
-        
+        while(!t.getLexema().equals(";")){
+           t = outraList.get(++pos);
+           if(t.getTipo().equals("identificador")){
+               
+               if(tabelaSimbolos.containsKey(t.getLexema())){
+                   erros.add("Variavel não declarada na linha "+t.getLinha());
+               }
+           }
+        }
     }
     
     public void expAritmetica()
