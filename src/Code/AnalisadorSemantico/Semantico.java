@@ -5,10 +5,13 @@
  */
 package Code.AnalisadorSemantico;
 
+import Code.AnalisadorSemantico.util.*;
 import Code.Token;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.LinkedHashMap;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 //Vohayoooo!
 
@@ -16,9 +19,8 @@ public class Semantico {
     
     List<Token> list;
     List<Token> outraList;
-    Integer i, j;
     List<String> erros;
-    LinkedHashMap escopos;
+    Tree escopos;
     ArrayList<Simbolo> tabelaSimbolos;
     
 
@@ -26,22 +28,24 @@ public class Semantico {
         list = l;
         tabelaSimbolos = new ArrayList<>();
         list.add(new Token("$","$",l.get(l.size()-1).getLinha()));
-        i = 0;
         erros = new ArrayList<>();
         this.outraList.addAll(list);
+        escopos = new Tree();
     }
     
     public void preRun(){
-        int j = 0; //escopo Atual
+        int j = 0, jmax = 0; //escopo Atual
+        Queue<Integer> q = new PriorityQueue();
         for(int pos = 0; pos < outraList.size();pos++){
             Token t = outraList.get(pos);
             
             if(t.getLexema().equals("inicio")){
-                j++; //isso ta errado
+                q.add(j);
+                jmax++;
+                escopos.insert(j, jmax);
+                j = jmax;
             }else if(t.getLexema().equals("fim")){
-                j--; //isso ta errado
-            } else if(t.getTipo().equals("identificador")){
-                //TODO 
+                j = q.poll();
             } else if(t.getTipo().equals("numero")){
                 if(t.getLexema().contains(".")){
                     t.setTipo("numero_real");
