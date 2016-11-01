@@ -19,6 +19,10 @@ public class Token {
         return tipo;
     }
     
+    public void setTipo(String s){
+        tipo = s;
+    }
+    
     public String getTipoCompleto(){
         return tipo+"_"+lexema;
     }
