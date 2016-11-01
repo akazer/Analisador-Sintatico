@@ -24,6 +24,8 @@ public class Semantico {
     List<String> erros;
     Tree escopos;
     Map<String,Simbolo> tabelaSimbolos;
+    int j, jmax, pos;
+    Token t;
     
 
     public Semantico(List<Token> l){
@@ -36,10 +38,10 @@ public class Semantico {
     }
     
     public void preRun(){
-        int j = 0, jmax = 0; //escopo Atual
+        j = 0; jmax = 0; //escopo Atual
         Queue<Integer> q = new LinkedList<>();
-        for(int pos = 0; pos < outraList.size();pos++){
-            Token t = outraList.get(pos);
+        for(pos = 0; pos < outraList.size();pos++){
+            t = outraList.get(pos);
             if(t.getLexema().equals("inicio")){
                 q.add(j);
                 jmax++;
@@ -74,10 +76,10 @@ public class Semantico {
     }
     
     public void run(){
-        int j = 0, jmax = 0; //escopo Atual
+        j = 0; jmax = 0; //escopo Atual
         Queue<Integer> q = new LinkedList<>();
-        for(int pos = 0; pos < outraList.size();pos++){
-            Token t = outraList.get(pos);
+        for(pos = 0; pos < outraList.size();pos++){
+            t = outraList.get(pos);
             
             if(t.getLexema().equals("inicio")){
                 q.add(j);
