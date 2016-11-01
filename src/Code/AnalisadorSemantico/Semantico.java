@@ -89,4 +89,30 @@ public class Semantico {
         }
     }
     
+    public boolean jaExiste(String nome, int escopoAtual)
+    {
+        int escopoTeste = 0;
+        for(int a = 0; a <= tabelaSimbolos.size(); a++)
+        {
+            if(nome.equals(tabelaSimbolos.get(a).nome))
+            {
+                escopoTeste = tabelaSimbolos.get(a).escopo;
+                while(escopoTeste != 0)
+                {
+                    if(escopoTeste == escopoAtual) return true;
+                    else
+                    {
+                        escopoTeste = escopos.nodeSearch(escopoTeste).pai.elem;
+                    }
+                }
+                if(escopoTeste == 0)
+                {
+                    if(escopoTeste == escopoAtual) return true;
+                }
+            }
+            else return false;
+        }
+        return false;
+    }
+    
 }
