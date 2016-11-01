@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
-import java.util.PriorityQueue;
+import java.util.Map;
 import java.util.Queue;
 
 //Vohayoooo!
@@ -22,12 +22,12 @@ public class Semantico {
     List<Token> outraList;
     List<String> erros;
     Tree escopos;
-    ArrayList<Simbolo> tabelaSimbolos;
+    Map<Integer,Simbolo> tabelaSimbolos;
     
 
     public Semantico(List<Token> l){
         list = l;
-        tabelaSimbolos = new ArrayList<>();
+        tabelaSimbolos = new LinkedHashMap<>();
         list.add(new Token("$","$",l.get(l.size()-1).getLinha()));
         erros = new ArrayList<>();
         this.outraList.addAll(list);
@@ -58,7 +58,9 @@ public class Semantico {
                 while(!t.getLexema().equals(";")){                    
                     t = outraList.get(++pos);
                     if(t.getTipo().equals("identificador")){
-                        tabelaSimbolos.add(new Simbolo(t.getLexema(), tipo, "variavel", j));
+                        if(outraList.get(++pos).getLexema().equals("/*")){
+                            //TO DO HARDCORE
+                        } else tabelaSimbolos.put(j,new Simbolo(t.getLexema(), tipo, "variavel", j));
                     }
                 }
                 
@@ -67,14 +69,14 @@ public class Semantico {
                 while(!t.getLexema().equals(";")){                    
                     t = outraList.get(++pos);
                     if(t.getTipo().equals("identificador")){
-                        tabelaSimbolos.add(new Simbolo(t.getLexema(), tipo, "constante", j));
+                        tabelaSimbolos.put(j,new Simbolo(t.getLexema(), tipo, "constante", j));
                     }
                 }
             } else if(t.getLexema().equals("funcao")){
                 String tipo = outraList.get(++pos).getLexema();
                 pos++;
                 Simbolo novaFuncao = new Simbolo(t.getLexema(), tipo, "funcao", j);
-                tabelaSimbolos.add(novaFuncao);
+                tabelaSimbolos.put(j,novaFuncao);
                 while(!t.getLexema().equals(")"))
                 {
                     t = outraList.get(++pos);
@@ -90,4 +92,7 @@ public class Semantico {
         }
     }
     
+    public void atribCheck(){
+        
+    }
 }
